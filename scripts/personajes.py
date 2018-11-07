@@ -12,11 +12,11 @@ class PlayerOne(pg.sprite.Sprite):
 		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
 		self.image.fill(AZUL)
 		self.rect = self.image.get_rect()
-		self.vx = 0
-		self.vy = 0
-		self.x = x * TAMAÑO_TILE
-		self.y = y * TAMAÑO_TILE
-		
+		self.vel = vec2(0, 0)
+		self.pos = vec2(x * TAMAÑO_TILE, y * TAMAÑO_TILE)
+		self.saltando = False
+		self.sentido = "D"
+		self.stamina = PLAYER_STAMINA
 
 	def cargar_imagenes(self):
 		self.cuadros_idle = [self.game.spritesheet_player.get_imagen(67, 196, 66, 92),
@@ -48,19 +48,7 @@ class PlayerOne(pg.sprite.Sprite):
 
 		self.cuadro_saltar.set_colorkey(NEGRO)
 
-	def control_salto(self):
-		if self.saltando:
-			if self.vel.y < CORTE_SALTO:
-				self.vel.y = CORTE_SALTO
-
-	def saltar(self):
-		self.rect.y += 2		
-		colisiones = pg.sprite.spritecollide(self, self.game.plataformas, False)
-		self.rect.y -= 2
-		if colisiones and not self.salto:
-			#self.game.sfx_salto.play()
-			self.saltando = True
-			self.vel.y = PLAYER_SALTO
+	
 
 	def animar(self):
 		este_instante = pg.time.get_ticks()
@@ -87,22 +75,128 @@ class PlayerOne(pg.sprite.Sprite):
 		# mascara de colision
 		self.mascara_col = pg.mask.from_surface(self.image)
 
+		
+
+	def colision_plataforma(self, dir):
+		# metodo para detectar colision con cualquier plataforma. spritexollide any chequea
+		# colision entre un sprite (self = player) vs una coleccion/grupo (game.plataformas)
+		# False para que no desaparezca al colisionar
+		# Devuelve una lista que contiene los sprites de un grupo que colisionan con el sprite
+		if dir == "x":
+			colision = pg.sprite.spritecollide(self, self.game.plataformas, False)
+			if colision:
+				if self.vel.x > 0:
+					# colision en el sentido x moviendose de izq a derecha
+					# mi posicion de x tiene que ser la izq de la plataforma menos el ancho
+					# de mi rectangulo de colision
+					self.pos.x = colision[0].rect.left - self.rect.width
+				if self.vel.x < 0:
+					# colision en el sentido x moviendose de derecha a izquierda
+					# mi posicion de x tiene que ser la derecha de la plataforma
+					self.pos.x = colision[0].rect.right
+				self.vel.x = 0
+				self.rect.x = self.pos.x				
+		if dir == "y":
+			colision = pg.sprite.spritecollide(self, self.game.plataformas, False)
+			if colision:
+				if self.vel.y > 0:
+					# colision en el sentido y moviendose de arriba para abajo (cayendo y+)
+					# mi posicion y (mi cabeza) tiene que ser el techa de la plataforma menos mi
+					# altura (= mis pies)
+					self.pos.y = colision[0].rect.top - self.rect.height
+				if self.vel.y < 0:					
+					# colision en el sentido y moviendose de abajo para arriba (saltando y-)
+					# mi posicion de y (mi cabeza) tiene que ser el fondo de la plataforma
+					self.pos.y = colision[0].rect.bottom
+				self.saltando = False
+				self.vel.y = 0
+				self.rect.y = self.pos.y
+				
+
+
+	def saltar(self):
+		self.rect.y += 2
+		colision = pg.sprite.spritecollide(self, self.game.plataformas, False)
+		self.rect.y -= 2
+		if colision and not self.saltando:
+			#print("salto", " ", colision)
+			#print(self.saltando)
+			#self.game.sfx_salto.play()
+			self.saltando = True
+			self.vel.y = PLAYER_SALTO
+
+
+	def control_salto(self):
+		if self.saltando:
+			if self.vel.y < CORTE_SALTO:
+				self.vel.y = CORTE_SALTO
+
+	def pad_salto(self):
+		self.vel.y = PLAYER_SALTO * BOOST_PAD_SALTO
+
+
+	def fisica_aceleracion(self):
+		self.acel.x += self.vel.x * PLAYER_FRICCION
+		self.vel += self.acel
+
+		# descomentar para tener una idea de como esta funcionando la fisica
+		# y modificar los valores en parametros para cambiar comportamiento
+		#print("acelX {0}".format(self.acel.x))
+		#print("velX {0}".format(self.vel.x))
+		#print("velY {0}".format(self.vel.y))
+
+		self.pos += self.vel * self.game.dt
+		self.rect.x = self.pos.x
+		self.colision_plataforma("x")
+		self.rect.y = self.pos.y
+		self.colision_plataforma("y")
+
+
+	def acelerar(self):
+		if self.sentido == "D":
+			self.acel.x = PLAYER_ACEL * BOOST_ACELERADOR
+		elif self.sentido == "I":
+			self.acel.x = -(PLAYER_ACEL * BOOST_ACELERADOR)
+
+		self.fisica_aceleracion()
+
+	
 
 	def update(self):
-		#self.animar()
-		#self.acel = vec2(0, GRAVEDAD)
-		tecla = pg.key.get_pressed()
+		self.acel = vec2(0, GRAVEDAD)		
+
+		tecla = pg.key.get_pressed()			
 		if tecla[pg.K_LEFT] and not tecla[pg.K_RIGHT]:
 			self.acel.x = -PLAYER_ACEL
+			self.sentido = "I"
 
-		if tecla[pg.K_RIGHT] and not tecla[pg.K_LEFT]:
+		elif tecla[pg.K_RIGHT] and not tecla[pg.K_LEFT]:
 			self.acel.x = PLAYER_ACEL
+			self.sentido = "D"
+
 
 		if tecla[pg.K_SPACE]:
-			self.saltar()
+			pass					
+	
+		if tecla[pg.K_LSHIFT]:
+			if self.sentido == "D" and self.stamina > 0:
+				self.acel.x = PLAYER_ACEL * PLAYER_DASH
+				self.stamina -= 1
+			elif self.sentido == "I" and self.stamina > 0:
+				self.acel.x = -(PLAYER_ACEL * PLAYER_DASH)
+				self.stamina -= 1
+			print(self.stamina)
 
-		self.acel.x += self.vel.x * PLAYER_FRICCION	
-		self.vel += self.acel
-		self.pos += self.vel + 0.5 * self.acel # v + a/2|		
 
-		self.rect.midbottom = self.pos
+		self.fisica_aceleracion()
+		
+
+
+
+class Enemigo(pg.sprite.Sprite):
+	"""docstring for Enemigo"""
+	def __init__(self, arg):
+		super(Enemigo, self).__init__()
+		self.arg = arg
+		
+		

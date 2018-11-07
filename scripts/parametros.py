@@ -14,12 +14,13 @@ FUENTE = "arial"
 
 # Constantes Personaje y enemigos
 vec2 = pg.math.Vector2 # vector2 para movimiento y posicion
-PLAYER_ACEL = 1
+PLAYER_ACEL = 100 # 120 px por segundo
 PLAYER_FRICCION = -0.1
-PLAYER_SALTO = -30
-CORTE_SALTO = -8
-UMBRAL_CORRER = 0.5
-GRAVEDAD = 1
+PLAYER_DASH = 2
+PLAYER_STAMINA = 100
+PLAYER_SALTO = -3000
+CORTE_SALTO = -500
+GRAVEDAD = 180
 BOOST_POW = -50
 
 # Capas
@@ -41,3 +42,11 @@ CELESTE = (0, 155, 155)
 TAMAÑO_TILE = 32
 ANCHO_GRILLA = ANCHO / TAMAÑO_TILE #  32 ancho
 ALTO_GRILLA = ALTO / TAMAÑO_TILE # 20 alto
+OFFSETX_CAMARA = 200
+
+# Items
+items = {"A": "acelerar", "S": "saltar", "C": "combotron" }
+PROB_ACELERADOR = 100
+BOOST_ACELERADOR = 40
+PROB_PAD_SALTO = 100
+BOOST_PAD_SALTO = 1.2

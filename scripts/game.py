@@ -1,11 +1,13 @@
 # clase principal que almacena todo el juego
 import pygame as pg
 import os
+import random
 from pathlib import Path
 from scripts.parametros import *
 from scripts.personajes import *
 from scripts.tiles import *
 from scripts.camara import *
+from scripts.item import *
 
 class Game():
 	def __init__(self):
@@ -26,7 +28,7 @@ class Game():
 		# metodo para cargar datos desde archivos
 		carpeta_mapas = Path("mapas")
 
-		num = 0
+		num = 1
 		self.mapa = Mapa(carpeta_mapas / "mapa{}.txt".format(num))
 
 	def eventos(self):
@@ -37,6 +39,13 @@ class Game():
 			if evento.type == pg.KEYDOWN:
 				if evento.key == pg.K_ESCAPE:
 					self.quit()
+				if evento.key == pg.K_SPACE:
+					self.player.saltar()
+				#if evento.key == pg.K_LSHIFT:
+					#self.player.dashear()
+			if evento.type == pg.KEYUP:
+				if evento.key == pg.K_SPACE:
+					self.player.control_salto()
 
 	def dibujar_grilla(self):
 		for x in range(0, ANCHO, TAMAÑO_TILE):
@@ -50,9 +59,10 @@ class Game():
 		pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
 		self.pantalla.fill(CELESTE) # lleno la pantalla de fondo celeste
 		self.dibujar_grilla()
+		#self.sprites.draw(self.pantalla)
 		for sprite in self.sprites:
-			# dibujo en pantalla todos los sprites			
-			self.pantalla.blit(sprite.image, self.camara.offset(sprite))
+			# por cada sprite que exista en el grupo principal de sprites
+			self.pantalla.blit(sprite.image, self.camara.aplicar_camara(sprite))
 					
 		pg.display.flip()
 
@@ -106,18 +116,26 @@ class Game():
 					self.player = PlayerOne(self, col, fila) # inicializo al player
 				elif tile == "E":
 					Enemigo(self, col, fila)
+				elif tile == "A":
+					if random.randrange(100) < PROB_ACELERADOR:
+						Acelerador(self, col, fila)
+				elif tile == "S":
+					if random.randrange(100) < PROB_PAD_SALTO:
+						PadSalto(self, col, fila)
+
 
 	def nuevo_juego(self):
 		# cada vez que se inicia o reinicia el juego, no la ventana
 		# creacion de grupos para manejar sprites mas eficientemente
 		self.sprites = pg.sprite.LayeredUpdates() # grupo para todos los sprites, con capas
 		self.plataformas = pg.sprite.Group()
+		self.items = pg.sprite.Group()
 		
 		# instanciar el mapa
 		self.mapear()	
 		
-		# instanciamos la camara
-		self.camara = Camara(self.mapa.ancho, self.mapa.alto)
+		# instanciamos la camara con los valores del mapa que salen en la carga de datos
+		self.camara = Camara(self,self.mapa.ancho, self.mapa.alto)
 
 		# iniciamos el juego
 		self.jugar()
@@ -125,7 +143,18 @@ class Game():
 	def update(self):
 		# metodo principal que maneja colisiones, condiciones de victoria/derrota, spawns y re-spawns
 		self.sprites.update()
-		self.camara.update(self.player)		
+		print(self.player.acel.x)
+		# la camara sigue al jugador
+		self.camara.update(self.player)
+
+		colision_item = pg.sprite.spritecollide(self.player, self.items, True)
+		for item in colision_item:
+			if item.type == "acelerar":
+				#self.sfx_boost.play()
+				self.player.acelerar()
+			elif item.type == "saltar":
+				# insertar sonido
+				self.player.pad_salto()			
 
 
 	def jugar(self):
