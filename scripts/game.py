@@ -11,21 +11,21 @@ from scripts.item import *
 
 # GUI
 def timer(sup, x, y, pct):
-    if pct < 0:
-        pct = 0
-    ancho = 100
-    alto = 20
-    relleno = pct * ancho
-    borde = pg.Rect(x, y, ancho, alto)
-    relleno_rect = pg.Rect(x, y, relleno, alto)
-    if pct >= 0.8:
-        color = ROJO
-    elif pct > 0.3 and pct < 0.8:
-        color = AMARILLO
-    else:
-        color = VERDE
-    pg.draw.rect(sup, color, relleno_rect)
-    pg.draw.rect(sup, BLANCO, borde, 2)
+	if pct < 0:
+		pct = 0
+	ancho = 100
+	alto = 20
+	relleno = pct * ancho
+	borde = pg.Rect(x, y, ancho, alto)
+	relleno_rect = pg.Rect(x, y, relleno, alto)
+	if pct >= 0.8:
+		color = ROJO
+	elif pct > 0.3 and pct < 0.8:
+		color = AMARILLO
+	else:
+		color = VERDE
+	pg.draw.rect(sup, color, relleno_rect)
+	pg.draw.rect(sup, BLANCO, borde, 2)
 
 
 
@@ -45,6 +45,7 @@ class Game():
 		self.pausado = False
 		self.tiempo_final = 10000
 		self.control_tiempo = 0
+		self.nivel = 1
 
 	def cargar_datos(self):
 		# metodo para cargar datos desde archivos
@@ -53,8 +54,12 @@ class Game():
 
 		carpeta_player = Path("gfx/Brain")
 		carpeta_enemigos = Path("gfx/enemigos")
-		carpeta_mapas = Path("mapas")
+		carpet_fondos = Path("gfx/fondos")
 		carpeta_gfx = Path("gfx")
+
+		self.img_fondos = []
+		for i in range(1, 4):
+			self.img_fondos.append(pg.image.load(os.path.join(carpet_fondos, "{0}.png".format(i))))
 
 		self.img_av_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["av_idle"])).convert_alpha()
 		self.img_av_idle = pg.transform.scale(self.img_av_idle, (TAMAÑO_TILE, TAMAÑO_TILE))
@@ -67,9 +72,13 @@ class Game():
 		self.img_virus = pg.transform.scale(self.img_virus, (TAMAÑO_TILE, TAMAÑO_TILE))
 		self.spritesheet_bot = Spritesheet(os.path.join(carpeta_gfx, SPRITESHEETS["bot"]))
 		self.spritesheet_brain = Spritesheet(os.path.join(carpeta_player, SPRITESHEET_BRAIN))
+		
 
-		num = 1
-		self.mapa = Mapa(carpeta_mapas / "mapa{}.txt".format(num))
+	def cargar_nivel(self):
+		carpeta_mapas = Path("mapas")
+		self.mapa = Mapa(carpeta_mapas / "mapa{}.txt".format(self.nivel))
+		self.mapear()
+
 
 	def eventos(self):
 		# metodo que maneja inputs de teclado, todo lo relacionado a ingreso de usuario
@@ -94,6 +103,7 @@ class Game():
 		for y in range(0, ALTO, TAMAÑO_TILE):
 			pg.draw.line(self.pantalla, NEGRO, (0, y), (ANCHO, y))
 
+
 	def dibujar(self):
 		# metodo que maneja el dibujo en pantalla de todas las cosas
 		pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
@@ -108,6 +118,7 @@ class Game():
 		for sprite in self.sprites:
 			# por cada sprite que exista en el grupo principal de sprites
 			self.pantalla.blit(sprite.image, self.camara.aplicar_camara(sprite))
+	
 
 		if self.pausado:
 			self.pantalla.blit(self.pantalla_pausa, (0, 0))
@@ -183,6 +194,7 @@ class Game():
 						PadSalto(self, col, fila)
 
 
+
 	def nuevo_juego(self):
 		# cada vez que se inicia o reinicia el juego, no la ventana
 		# creacion de grupos para manejar sprites mas eficientemente
@@ -192,9 +204,11 @@ class Game():
 		self.antivirus = pg.sprite.Group()
 		self.bots = pg.sprite.Group()
 		self.portales = pg.sprite.Group()
+		self.fondos = pg.sprite.Group()
 		
 		# instanciar el mapa
-		self.mapear()	
+		#self.mapear()
+		self.cargar_nivel()	
 		
 		# instanciamos la camara con los valores del mapa que salen en la carga de datos
 		self.camara = Camara(self,self.mapa.ancho, self.mapa.alto)
@@ -216,8 +230,9 @@ class Game():
 		colision_portal = pg.sprite.spritecollide(self.player, self.portales, False)
 		if colision_portal:
 			for portal in colision_portal:
-				if self.player.rect.centerx == portal.rect.centerx:
-					self.quit()
+				if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
+					self.nivel += 1
+					self.nuevo_juego()
 
 		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, True, pg.sprite.collide_mask)
 		for enemigo in colision_enemigo_bot:
