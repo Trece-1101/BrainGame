@@ -80,4 +80,3 @@ class PlataformaTrampa(pg.sprite.Sprite):
 			#if self.rect.y - pos_original > 100:
 			#	print(str(self.rect.y - pos_original))
 			#	self.kill()
-

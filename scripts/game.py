@@ -43,9 +43,9 @@ class Game():
 		self.fuente = pg.font.match_font(FUENTE)
 		self.cargar_datos()
 		self.pausado = False
-		self.tiempo_final = 10000
+		self.tiempo_final = TIEMPO_NIVEL
 		self.control_tiempo = 0
-		self.nivel = 1
+		self.nivel = 3
 
 	def cargar_datos(self):
 		# metodo para cargar datos desde archivos
@@ -54,12 +54,12 @@ class Game():
 
 		carpeta_player = Path("gfx/Brain")
 		carpeta_enemigos = Path("gfx/enemigos")
-		carpet_fondos = Path("gfx/fondos")
+		self.carpeta_fondos = Path("gfx/fondos")
 		carpeta_gfx = Path("gfx")
 
-		self.img_fondos = []
-		for i in range(1, 4):
-			self.img_fondos.append(pg.image.load(os.path.join(carpet_fondos, "{0}.png".format(i))))
+		#self.img_fondos = []
+		#for i in range(1, 4):
+		#	self.img_fondos.append(pg.image.load(os.path.join(carpeta_fondos, "{0}.png".format(i))))		
 
 		self.img_av_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["av_idle"])).convert_alpha()
 		self.img_av_idle = pg.transform.scale(self.img_av_idle, (TAMAÑO_TILE, TAMAÑO_TILE))
@@ -114,7 +114,8 @@ class Game():
 
 		#descomentar para ver la grilla
 		#self.dibujar_grilla()
-		
+
+			
 		for sprite in self.sprites:
 			# por cada sprite que exista en el grupo principal de sprites
 			self.pantalla.blit(sprite.image, self.camara.aplicar_camara(sprite))
@@ -195,6 +196,8 @@ class Game():
 
 
 
+
+
 	def nuevo_juego(self):
 		# cada vez que se inicia o reinicia el juego, no la ventana
 		# creacion de grupos para manejar sprites mas eficientemente
@@ -208,7 +211,7 @@ class Game():
 		
 		# instanciar el mapa
 		#self.mapear()
-		self.cargar_nivel()	
+		self.cargar_nivel()
 		
 		# instanciamos la camara con los valores del mapa que salen en la carga de datos
 		self.camara = Camara(self,self.mapa.ancho, self.mapa.alto)
@@ -222,16 +225,24 @@ class Game():
 		# la camara sigue al jugador
 		self.camara.update(self.player)
 
+		#print(self.player.pos.y)
+
 		self.control_tiempo = pg.time.get_ticks()
-		#if self.tiempo_final - self.control_tiempo <= 0:
-		#	print("tiempo: {0} -- tiempofinal: {1} -- timeout".format(self.control_tiempo, self.tiempo_final))
-		#	self.jugando = False
+		#print(self.control_tiempo)
+		if self.tiempo_final - self.control_tiempo <= 0:
+			print("tiempo: {0} -- tiempofinal: {1} -- timeout".format(self.control_tiempo, self.tiempo_final))
+			self.jugando = False
+
+		if self.player.pos.y > 2000:
+			print("caida")
+			self.nuevo_juego()
 
 		colision_portal = pg.sprite.spritecollide(self.player, self.portales, False)
 		if colision_portal:
 			for portal in colision_portal:
 				if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
 					self.nivel += 1
+					self.tiempo_final += TIEMPO_NIVEL					
 					self.nuevo_juego()
 
 		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, True, pg.sprite.collide_mask)

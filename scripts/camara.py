@@ -40,12 +40,3 @@ class Camara:
 
 		# movemos la camara tirandola de su xy
 		self.camara = pg.Rect(x, y, self.ancho, self.alto)	
-
-		
-
-class Layer(object):
-	#Class to store the name and the rect of each layer
-	def __init__(self, index, image):
-		self.index = index
-		self.image = image
-		self.rect = self.image.get_rect()
