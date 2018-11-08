@@ -1,0 +1,6 @@
+<TextureAtlas imagePath="sprites.png">
+	<SubTexture name="Virus_Caminata-01 (Personalizado).png" x="0" y="0" width="30" height="44"/>
+	<SubTexture name="Virus_Caminata-02 (Personalizado).png" x="85" y="0" width="21" height="47"/>
+	<SubTexture name="Virus_Caminata-03 (Personalizado).png" x="32" y="0" width="27" height="45"/>
+	<SubTexture name="Virus_Caminata-04 (Personalizado).png" x="61" y="0" width="22" height="47"/>
+</TextureAtlas>

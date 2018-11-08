@@ -9,6 +9,26 @@ from scripts.tiles import *
 from scripts.camara import *
 from scripts.item import *
 
+# GUI
+def timer(sup, x, y, pct):
+    if pct < 0:
+        pct = 0
+    ancho = 100
+    alto = 20
+    relleno = pct * ancho
+    borde = pg.Rect(x, y, ancho, alto)
+    relleno_rect = pg.Rect(x, y, relleno, alto)
+    if pct >= 0.8:
+        color = ROJO
+    elif pct > 0.3 and pct < 0.8:
+        color = AMARILLO
+    else:
+        color = VERDE
+    pg.draw.rect(sup, color, relleno_rect)
+    pg.draw.rect(sup, BLANCO, borde, 2)
+
+
+
 class Game():
 	def __init__(self):
 		# inicializar el juego
@@ -23,21 +43,30 @@ class Game():
 		self.fuente = pg.font.match_font(FUENTE)
 		self.cargar_datos()
 		self.pausado = False
-		#pg.key.set_repeat(500, 100)
+		self.tiempo_final = 10000
+		self.control_tiempo = 0
 
 	def cargar_datos(self):
 		# metodo para cargar datos desde archivos
 		self.pantalla_pausa = pg.Surface(self.pantalla.get_size()).convert_alpha()
 		self.pantalla_pausa.fill((0, 0, 0, 180))
 
+		carpeta_player = Path("gfx/Brain")
 		carpeta_enemigos = Path("gfx/enemigos")
 		carpeta_mapas = Path("mapas")
+		carpeta_gfx = Path("gfx")
 
 		self.img_av_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["av_idle"])).convert_alpha()
+		self.img_av_idle = pg.transform.scale(self.img_av_idle, (TAMAÑO_TILE, TAMAÑO_TILE))
 		self.img_av_run1 = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["av_run1"])).convert_alpha()
+		self.img_av_run1 = pg.transform.scale(self.img_av_run1, (TAMAÑO_TILE, TAMAÑO_TILE))
+		self.img_av_muerto = pg.transform.rotate(self.img_av_idle, 180)
 		#self.img_bot_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["bot_idle"])).convert_alpha()
-		self.img_bot_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["prueba"])).convert_alpha()
+		#self.img_bot_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["prueba"])).convert_alpha()
 		self.img_virus = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["prueba2"])).convert_alpha()
+		self.img_virus = pg.transform.scale(self.img_virus, (TAMAÑO_TILE, TAMAÑO_TILE))
+		self.spritesheet_bot = Spritesheet(os.path.join(carpeta_gfx, SPRITESHEETS["bot"]))
+		self.spritesheet_brain = Spritesheet(os.path.join(carpeta_player, SPRITESHEET_BRAIN))
 
 		num = 1
 		self.mapa = Mapa(carpeta_mapas / "mapa{}.txt".format(num))
@@ -70,6 +99,8 @@ class Game():
 		pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
 		
 		self.pantalla.fill(CELESTE) # lleno la pantalla de fondo celeste
+
+		timer(self.pantalla, 50, 10, self.control_tiempo / self.tiempo_final)
 
 		#descomentar para ver la grilla
 		#self.dibujar_grilla()
@@ -134,6 +165,10 @@ class Game():
 			for col, tile in enumerate(tiles):
 				if tile == "1":
 					Plataforma(self, col, fila)
+				elif tile == "2":
+					PlataformaTrampa(self, col, fila)
+				elif tile == "X":
+					Portal(self, col, fila)
 				elif tile == "P":
 					self.player = PlayerOne(self, col, fila) # inicializo al player				
 				elif tile == "B":
@@ -154,7 +189,9 @@ class Game():
 		self.sprites = pg.sprite.LayeredUpdates() # grupo para todos los sprites, con capas
 		self.plataformas = pg.sprite.Group()
 		self.items = pg.sprite.Group()
-		self.enemigos = pg.sprite.Group()
+		self.antivirus = pg.sprite.Group()
+		self.bots = pg.sprite.Group()
+		self.portales = pg.sprite.Group()
 		
 		# instanciar el mapa
 		self.mapear()	
@@ -171,16 +208,39 @@ class Game():
 		# la camara sigue al jugador
 		self.camara.update(self.player)
 
-		colision_enemigo = pg.sprite.spritecollide(self.player, self.enemigos, True, pg.sprite.collide_mask)
-		for enemigo in colision_enemigo:
-			if enemigo.type == "BotAraña":
-				self.player.lastimar(DANIO_BOT)			
-			elif enemigo.type == "Antivirus":
-				self.player.lastimar(DANIO_AV)
+		self.control_tiempo = pg.time.get_ticks()
+		#if self.tiempo_final - self.control_tiempo <= 0:
+		#	print("tiempo: {0} -- tiempofinal: {1} -- timeout".format(self.control_tiempo, self.tiempo_final))
+		#	self.jugando = False
 
-			if self.player.vida <= 0:
-				pg.time.wait(2000)
-				self.jugando = False
+		colision_portal = pg.sprite.spritecollide(self.player, self.portales, False)
+		if colision_portal:
+			for portal in colision_portal:
+				if self.player.rect.centerx == portal.rect.centerx:
+					self.quit()
+
+		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, True, pg.sprite.collide_mask)
+		for enemigo in colision_enemigo_bot:
+			if enemigo.type == "BotAraña":
+				if enemigo.vivo:
+					self.player.lastimar(DANIO_BOT)			
+
+
+		colision_enemigo_av = pg.sprite.spritecollide(self.player, self.antivirus, False, pg.sprite.collide_mask)
+		for enemigo in colision_enemigo_av:		
+			if enemigo.type == "Antivirus":
+				if enemigo.vivo == True:
+					self.player.lastimar(DANIO_AV)
+
+		if self.player.vida <= 0:
+			#pg.time.wait(2000)
+			self.jugando = False
+
+		for av in self.antivirus:
+			colision = pg.sprite.spritecollide(av, self.bots, False)
+			if colision:
+				av.morir()		
+
 
 		colision_item = pg.sprite.spritecollide(self.player, self.items, True)
 		for item in colision_item:

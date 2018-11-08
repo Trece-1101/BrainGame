@@ -9,10 +9,10 @@ ALTO = 640
 MITAD_ANCHO = ANCHO / 2
 MITAD_ALTO = ALTO / 2
 FPS = 60
-ACTUALIZACION_CUADROS = 250
+ACTUALIZACION_CUADROS = 150
 FUENTE = "arial"
 
-# Constantes Personaje y enemigos
+# Constantes Personaje
 vec2 = pg.math.Vector2 # vector2 para movimiento y posicion
 PLAYER_ACEL = 100 # 120 px por segundo
 PLAYER_FRICCION = -0.1
@@ -24,12 +24,15 @@ GRAVEDAD = 180
 BOOST_POW = -50
 PLAYER_VIDA_INICIAL = 10
 PLAYER_IMG = ""
+SPRITESHEET_BRAIN = "sprites.png"
+UMBRAL_CORRER = 50
 
 # Capas
 PLAYER_LAYER = 2
 PLATAFORMA_LAYER = 1
 ITEM_LAYER = 1
 ENEMIGO_LAYER = 2
+PORTAL_LAYER = 1
 
 # Colores
 BLANCO = (255, 255, 255)
@@ -62,9 +65,9 @@ BOOST_PAD_SALTO = 1.2
 DANIO_BOT = 5
 DANIO_AV = 10
 MOV_AV = [150, 175, 200, 225, 250]
-#VEL_AV = [2, 3, 4, 5, 6, 8, 10]
-VEL_AV = [0.5]
+VEL_AV = [2, 3, 4, 5, 6]
 VEL_BOT = [10, 15, 20, 25, 30, 35]
+TIEMPO_ANIMACION_MUERTE = 500
 RADIO_DETECCION = [200, 250, 300, 350, 400]
 IMG_ENEMIGOS = {"av_idle": "avIdle.png",
 				"av_run1": "avrun.png",
@@ -76,3 +79,6 @@ IMG_ENEMIGOS = {"av_idle": "avIdle.png",
 				"bot_walk12": "botwalkizq2.png",
 				"prueba": "p1_front.png",
 				"prueba2": "p3_front.png"}
+
+
+SPRITESHEETS = {"bot": "Prueba_sprite.png"}
