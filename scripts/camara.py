@@ -38,4 +38,4 @@ class Camara:
 		y = max(-(self.alto - ALTO), y) # limite abajo
 
 		# movemos la camara tirandola de su xy
-		self.camara = pg.Rect(x, y, self.ancho, self.alto)
+		self.camara = pg.Rect(x, y, self.ancho, self.alto)	

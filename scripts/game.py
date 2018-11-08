@@ -22,11 +22,22 @@ class Game():
 		self.jugando = True # bool para determinar el game_over o no
 		self.fuente = pg.font.match_font(FUENTE)
 		self.cargar_datos()
+		self.pausado = False
 		#pg.key.set_repeat(500, 100)
 
 	def cargar_datos(self):
 		# metodo para cargar datos desde archivos
+		self.pantalla_pausa = pg.Surface(self.pantalla.get_size()).convert_alpha()
+		self.pantalla_pausa.fill((0, 0, 0, 180))
+
+		carpeta_enemigos = Path("gfx/enemigos")
 		carpeta_mapas = Path("mapas")
+
+		self.img_av_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["av_idle"])).convert_alpha()
+		self.img_av_run1 = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["av_run1"])).convert_alpha()
+		#self.img_bot_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["bot_idle"])).convert_alpha()
+		self.img_bot_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["prueba"])).convert_alpha()
+		self.img_virus = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["prueba2"])).convert_alpha()
 
 		num = 1
 		self.mapa = Mapa(carpeta_mapas / "mapa{}.txt".format(num))
@@ -41,8 +52,8 @@ class Game():
 					self.quit()
 				if evento.key == pg.K_SPACE:
 					self.player.saltar()
-				#if evento.key == pg.K_LSHIFT:
-					#self.player.dashear()
+				if evento.key == pg.K_p:
+					self.pausado = not self.pausado
 			if evento.type == pg.KEYUP:
 				if evento.key == pg.K_SPACE:
 					self.player.control_salto()
@@ -57,12 +68,19 @@ class Game():
 	def dibujar(self):
 		# metodo que maneja el dibujo en pantalla de todas las cosas
 		pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
+		
 		self.pantalla.fill(CELESTE) # lleno la pantalla de fondo celeste
-		self.dibujar_grilla()
-		#self.sprites.draw(self.pantalla)
+
+		#descomentar para ver la grilla
+		#self.dibujar_grilla()
+		
 		for sprite in self.sprites:
 			# por cada sprite que exista en el grupo principal de sprites
 			self.pantalla.blit(sprite.image, self.camara.aplicar_camara(sprite))
+
+		if self.pausado:
+			self.pantalla.blit(self.pantalla_pausa, (0, 0))
+			self.dibujar_texto("Paused", 22, ROJO, MITAD_ANCHO, MITAD_ALTO)
 					
 		pg.display.flip()
 
@@ -97,7 +115,11 @@ class Game():
 		run = self.stop()
 		return run
 
-	def dibujar_texto(self, texto, tamaño, color, x, y):
+	def game_over(self):
+		# pantalla de menu para volver a jugar
+		self.quit()
+
+	def dibujar_texto(self, texto, tamaño, color, x, y, align="topleft"):
 		# metodo para recibir un string y dibujarlo en pantalla
 		font = pg.font.Font(self.fuente, tamaño)
 		texto_surface = font.render(texto, True, color)
@@ -113,9 +135,11 @@ class Game():
 				if tile == "1":
 					Plataforma(self, col, fila)
 				elif tile == "P":
-					self.player = PlayerOne(self, col, fila) # inicializo al player
-				elif tile == "E":
-					Enemigo(self, col, fila)
+					self.player = PlayerOne(self, col, fila) # inicializo al player				
+				elif tile == "B":
+					Botaraña(self, col, fila)
+				elif tile == "V":
+					Antivirus(self, col, fila)				
 				elif tile == "A":
 					if random.randrange(100) < PROB_ACELERADOR:
 						Acelerador(self, col, fila)
@@ -130,6 +154,7 @@ class Game():
 		self.sprites = pg.sprite.LayeredUpdates() # grupo para todos los sprites, con capas
 		self.plataformas = pg.sprite.Group()
 		self.items = pg.sprite.Group()
+		self.enemigos = pg.sprite.Group()
 		
 		# instanciar el mapa
 		self.mapear()	
@@ -143,9 +168,19 @@ class Game():
 	def update(self):
 		# metodo principal que maneja colisiones, condiciones de victoria/derrota, spawns y re-spawns
 		self.sprites.update()
-		print(self.player.acel.x)
 		# la camara sigue al jugador
 		self.camara.update(self.player)
+
+		colision_enemigo = pg.sprite.spritecollide(self.player, self.enemigos, True, pg.sprite.collide_mask)
+		for enemigo in colision_enemigo:
+			if enemigo.type == "BotAraña":
+				self.player.lastimar(DANIO_BOT)			
+			elif enemigo.type == "Antivirus":
+				self.player.lastimar(DANIO_AV)
+
+			if self.player.vida <= 0:
+				pg.time.wait(2000)
+				self.jugando = False
 
 		colision_item = pg.sprite.spritecollide(self.player, self.items, True)
 		for item in colision_item:
@@ -164,9 +199,11 @@ class Game():
 		while self.jugando:			
 			self.dt = self.FPSclock.tick(FPS) / 1000
 			self.eventos()
-			self.update()
+			if not self.pausado:
+				self.update()			
 			self.dibujar()
 		pg.mixer.music.fadeout(800)
+		self.game_over()
 
 
 Game()

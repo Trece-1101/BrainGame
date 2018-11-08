@@ -1,28 +1,70 @@
 import pygame as pg
+from random import randrange, uniform, choice
 from scripts.parametros import *
+
+def colision_plataforma(sprite, grupo, dir):
+		# metodo para detectar colision con cualquier plataforma. spritexollide chequea
+		# colision entre un sprite (self = player) vs una coleccion/grupo (game.plataformas)
+		# False para que no desaparezca al colisionar
+		# Devuelve una lista que contiene los sprites de un grupo que colisionan con el sprite
+		#print(sprite)
+		#print(grupo)
+		if dir == "x":
+			colision = pg.sprite.spritecollide(sprite, grupo, False)
+			if colision:
+				if sprite.vel.x > 0:
+					# colision en el sentido x moviendose de izq a derecha
+					# mi posicion de x tiene que ser la izq de la plataforma menos el ancho
+					# de mi rectangulo de colision
+					sprite.pos.x = colision[0].rect.left - sprite.rect.width
+				if sprite.vel.x < 0:
+					# colision en el sentido x moviendose de derecha a izquierda
+					# mi posicion de x tiene que ser la derecha de la plataforma
+					sprite.pos.x = colision[0].rect.right
+				sprite.vel.x = 0
+				sprite.rect.x = sprite.pos.x				
+		if dir == "y":
+			colision = pg.sprite.spritecollide(sprite, grupo, False)
+			if colision:
+				if sprite.vel.y > 0:
+					# colision en el sentido y moviendose de arriba para abajo (cayendo y+)
+					# mi posicion y (mi cabeza) tiene que ser el techa de la plataforma menos mi
+					# altura (= mis pies)
+					sprite.pos.y = colision[0].rect.top - sprite.rect.height
+				if sprite.vel.y < 0:					
+					# colision en el sentido y moviendose de abajo para arriba (saltando y-)
+					# mi posicion de y (mi cabeza) tiene que ser el fondo de la plataforma
+					sprite.pos.y = colision[0].rect.bottom
+				if isinstance(sprite, PlayerOne):
+					sprite.saltando = False
+				sprite.vel.y = 0
+				sprite.rect.y = sprite.pos.y
 
 
 class PlayerOne(pg.sprite.Sprite):
 	"""docstring for PlayerOne"""
 	def __init__(self, game, x, y):
 		self.groups = game.sprites
-		#self._layer = PLAYER_LAYER
+		self._layer = PLAYER_LAYER
 		super(PlayerOne, self).__init__(self.groups)
 		self.game = game
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image.fill(AZUL)
+		self.cargar_imagenes()
+		#self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
+		#self.image.fill(AZUL)
+		self.image = self.cuadros_idle[0]
 		self.rect = self.image.get_rect()
 		self.vel = vec2(0, 0)
+		self.acel = vec2(0, 0)
 		self.pos = vec2(x * TAMAÑO_TILE, y * TAMAÑO_TILE)
 		self.saltando = False
 		self.sentido = "D"
 		self.stamina = PLAYER_STAMINA
+		self.vida = PLAYER_VIDA_INICIAL
 
 	def cargar_imagenes(self):
-		self.cuadros_idle = [self.game.spritesheet_player.get_imagen(67, 196, 66, 92),
-							self.game.spritesheet_player.get_imagen(0, 196, 66, 92)]		
+		self.cuadros_idle = [self.game.img_virus]		
 
-		self.cuadros_correr_d = [self.game.spritesheet_player.get_imagen(0, 0, 72, 97),
+		'''self.cuadros_correr_d = [self.game.spritesheet_player.get_imagen(0, 0, 72, 97),
 								self.game.spritesheet_player.get_imagen(73, 0, 72, 97),
 								self.game.spritesheet_player.get_imagen(146, 0, 72, 97),
 								self.game.spritesheet_player.get_imagen(0, 98, 72, 97),
@@ -34,25 +76,25 @@ class PlayerOne(pg.sprite.Sprite):
 		for cuadro in self.cuadros_correr_d:
 			self.cuadros_caminar_i.append(pg.transform.flip(cuadro, True, False))
 
-		self.cuadro_saltar = self.game.spritesheet_player.get_imagen(438, 93, 67, 94)
+		self.cuadro_saltar = self.game.spritesheet_player.get_imagen(438, 93, 67, 94)'''
 
 		# quitar el fondo negro
 		for cuadro in self.cuadros_idle:
 			cuadro.set_colorkey(NEGRO)
 
-		for cuadro in self.cuadros_correr_d:
+		'''for cuadro in self.cuadros_correr_d:
 			cuadro.set_colorkey(NEGRO)
 
 		for cuadro in self.cuadros_correr_i:
-			cuadro.set_colorkey(NEGRO)
+			cuadro.set_colorkey(NEGRO)'''
 
-		self.cuadro_saltar.set_colorkey(NEGRO)
+		#self.cuadro_saltar.set_colorkey(NEGRO)
 
 	
 
 	def animar(self):
 		este_instante = pg.time.get_ticks()
-		if self.vel.x > UMBRAL_CORRER or self.vel.x < -UMBRAL_CORRER:
+		'''if self.vel.x > UMBRAL_CORRER or self.vel.x < -UMBRAL_CORRER:
 			self.caminando = True
 		else:
 			self.caminando = False
@@ -70,48 +112,11 @@ class PlayerOne(pg.sprite.Sprite):
 			if (este_instante - self.ultimo_update) > ACTUALIZACION_CUADROS:
 				self.ultimo_update = este_instante
 				self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_idle)
-				self.image = self.cuadros_idle[self.cuadro_actual]
+				self.image = self.cuadros_idle[self.cuadro_actual]'''
 
 		# mascara de colision
-		self.mascara_col = pg.mask.from_surface(self.image)
+		self.mascara_col = pg.mask.from_surface(self.image)	
 
-		
-
-	def colision_plataforma(self, dir):
-		# metodo para detectar colision con cualquier plataforma. spritexollide any chequea
-		# colision entre un sprite (self = player) vs una coleccion/grupo (game.plataformas)
-		# False para que no desaparezca al colisionar
-		# Devuelve una lista que contiene los sprites de un grupo que colisionan con el sprite
-		if dir == "x":
-			colision = pg.sprite.spritecollide(self, self.game.plataformas, False)
-			if colision:
-				if self.vel.x > 0:
-					# colision en el sentido x moviendose de izq a derecha
-					# mi posicion de x tiene que ser la izq de la plataforma menos el ancho
-					# de mi rectangulo de colision
-					self.pos.x = colision[0].rect.left - self.rect.width
-				if self.vel.x < 0:
-					# colision en el sentido x moviendose de derecha a izquierda
-					# mi posicion de x tiene que ser la derecha de la plataforma
-					self.pos.x = colision[0].rect.right
-				self.vel.x = 0
-				self.rect.x = self.pos.x				
-		if dir == "y":
-			colision = pg.sprite.spritecollide(self, self.game.plataformas, False)
-			if colision:
-				if self.vel.y > 0:
-					# colision en el sentido y moviendose de arriba para abajo (cayendo y+)
-					# mi posicion y (mi cabeza) tiene que ser el techa de la plataforma menos mi
-					# altura (= mis pies)
-					self.pos.y = colision[0].rect.top - self.rect.height
-				if self.vel.y < 0:					
-					# colision en el sentido y moviendose de abajo para arriba (saltando y-)
-					# mi posicion de y (mi cabeza) tiene que ser el fondo de la plataforma
-					self.pos.y = colision[0].rect.bottom
-				self.saltando = False
-				self.vel.y = 0
-				self.rect.y = self.pos.y
-				
 
 
 	def saltar(self):
@@ -147,9 +152,9 @@ class PlayerOne(pg.sprite.Sprite):
 
 		self.pos += self.vel * self.game.dt
 		self.rect.x = self.pos.x
-		self.colision_plataforma("x")
+		colision_plataforma(self, self.game.plataformas, "x")
 		self.rect.y = self.pos.y
-		self.colision_plataforma("y")
+		colision_plataforma(self, self.game.plataformas, "y")
 
 
 	def acelerar(self):
@@ -160,11 +165,14 @@ class PlayerOne(pg.sprite.Sprite):
 
 		self.fisica_aceleracion()
 
+	def lastimar(self, danio):
+		self.vida -= danio
+
 	
 
 	def update(self):
-		self.acel = vec2(0, GRAVEDAD)		
-
+		self.animar()		
+		self.acel = vec2(0, GRAVEDAD)
 		tecla = pg.key.get_pressed()			
 		if tecla[pg.K_LEFT] and not tecla[pg.K_RIGHT]:
 			self.acel.x = -PLAYER_ACEL
@@ -185,18 +193,167 @@ class PlayerOne(pg.sprite.Sprite):
 			elif self.sentido == "I" and self.stamina > 0:
 				self.acel.x = -(PLAYER_ACEL * PLAYER_DASH)
 				self.stamina -= 1
-			print(self.stamina)
+			#print(self.stamina)
 
 
 		self.fisica_aceleracion()
-		
 
 
 
-class Enemigo(pg.sprite.Sprite):
-	"""docstring for Enemigo"""
-	def __init__(self, arg):
-		super(Enemigo, self).__init__()
-		self.arg = arg
+
+class Botaraña(pg.sprite.Sprite):
+	"""docstring for Enemigo"""	
+	def __init__(self, game, x, y):
+		self.groups = game.sprites, game.enemigos
+		self.layer = ENEMIGO_LAYER
+		super(Botaraña, self).__init__(self.groups)
+		self.game = game
+		self.cuadro_actual = 0
+		self.ultimo_update = 0
+		self.type = items["B"]
+		self.cargar_imagenes()
+		#self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
+		self.image = self.cuadro_idle[0]
+		#self.image.fill(ROJO)
+		self.rect = self.image.get_rect()
+		self.vel = vec2(0, 0)
+		self.acel = vec2(0, 0)
+		self.pos = vec2(x, y) * TAMAÑO_TILE
+		self.rect.center = self.pos
+		self.acel = vec2(0, 0)
+		#self.objetivo = self.game.player
+
+	def cargar_imagenes(self):
+		self.cuadro_idle = [self.game.img_bot_idle]
+		#self.cuadros_correr_d = [self.game.img_av_run1,
+		#					self.game.img_av_run1]			
+
+		#self.cuadros_correr_i = []
+		#for cuadro in self.cuadros_correr_d:
+		#	self.cuadros_correr_i.append(pg.transform.flip(cuadro, True, False))
+
+		#self.cuadro_saltar = self.game.spritesheet_player.get_imagen(438, 93, 67, 94)
+
+		# quitar el fondo negro
+		#for cuadro in self.cuadros_correr_d:
+		#	cuadro.set_colorkey(NEGRO)
+
+		#for cuadro in self.cuadros_correr_i:
+		#	cuadro.set_colorkey(NEGRO)
+
+		for cuadro in self.cuadro_idle:
+			cuadro.set_colorkey(BLANCO)
+
 		
+
+
+	def animar(self):
+		pass
+		'''este_instante = pg.time.get_ticks()
+		if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
+				self.ultimo_update = este_instante
+				self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_correr_d)				
+				if self.vel.x > 0:
+					self.image = self.cuadros_correr_d[self.cuadro_actual]
+				else:
+					self.image = self.cuadros_correr_i[self.cuadro_actual]
+
+		# mascara de colision
+		self.mascara_col = pg.mask.from_surface(self.image)'''
+
+
+
+	def update(self):
+		#self.animar()
+		self.acel = vec2(0, GRAVEDAD)
+		dist_obj = self.pos - self.game.player.pos
+		#print(self.pos)
+		#print(dist_obj[1])
+		if (abs(dist_obj[0]) < choice(RADIO_DETECCION)) and (abs(dist_obj[1]) < 70):
+			#print("detectado")
+			if dist_obj[0] > 0:             
+				self.acel.x -= choice(VEL_BOT)
+				#self.vel.y = -400
+			else:
+				self.acel.x += choice(VEL_BOT)
+				#self.vel.y = -400
+		else:
+			self.acel.x = 0				
+			#print("no detectado")
+
+		self.vel += self.acel
+		self.pos += self.vel * self.game.dt
+		self.rect.x = self.pos.x
+		colision_plataforma(self, self.game.plataformas, "x")
+		self.rect.y = self.pos.y
+		colision_plataforma(self, self.game.plataformas, "y")
 		
+
+
+class Antivirus(pg.sprite.Sprite):
+	"""docstring for Enemigo"""	
+	def __init__(self, game, x, y):
+		self.groups = game.sprites, game.enemigos
+		self.layer = ENEMIGO_LAYER
+		super(Antivirus, self).__init__(self.groups)
+		self.game = game
+		self.cuadro_actual = 0
+		self.ultimo_update = 0
+		self.type = items["AV"]
+		self.cargar_imagenes()
+		#self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
+		self.image = self.cuadro_idle[0]
+		#self.image.fill(NEGRO)
+		self.rect = self.image.get_rect()
+		self.x = x
+		self.y = y
+		self.rect.x = x * TAMAÑO_TILE
+		self.rect.y = y * TAMAÑO_TILE		
+		self.vx = choice(VEL_AV)
+		if randrange(100) < 50:
+			self.vx *= -1
+		self.iniciox = self.rect.x
+		self.movimimiento = choice(MOV_AV)
+
+	def cargar_imagenes(self):
+		self.cuadro_idle = [self.game.img_bot_idle]
+		self.cuadros_correr_d = [self.game.img_av_run1,
+							self.game.img_av_run1]			
+
+		self.cuadros_correr_i = []
+		for cuadro in self.cuadros_correr_d:
+			self.cuadros_correr_i.append(pg.transform.flip(cuadro, True, False))	
+
+		# quitar el fondo negro
+		for cuadro in self.cuadros_correr_d:
+			cuadro.set_colorkey(NEGRO)
+
+		for cuadro in self.cuadros_correr_i:
+			cuadro.set_colorkey(NEGRO)
+
+		for cuadro in self.cuadro_idle:
+			cuadro.set_colorkey(NEGRO)
+
+
+
+	def animar(self):
+		este_instante = pg.time.get_ticks()
+		'''if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
+				self.ultimo_update = este_instante
+				self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_correr_d)				
+				if self.vx > 0:
+					self.image = self.cuadros_correr_d[self.cuadro_actual]
+				else:
+					self.image = self.cuadros_correr_i[self.cuadro_actual]'''
+
+		# mascara de colision
+		self.mascara_col = pg.mask.from_surface(self.image)
+	
+
+	def update(self):
+		self.animar()
+		self.rect.x += self.vx
+		if ((self.rect.x - self.iniciox) > self.movimimiento) or ((self.rect.x - self.iniciox) < -self.movimimiento):
+			self.vx *= -1
+		#print(self.rect.x " -- " self.iniciox)
+		#print(str(self.rect.x - self.iniciox))
