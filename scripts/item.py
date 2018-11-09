@@ -46,7 +46,7 @@ class Combotron(pg.sprite.Sprite):
 		self.type = items["C"]
 		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
 		self.image = pg.transform.scale(self.image, (16, 16))
-		self.image.fill(NEGRO)
+		self.image.fill(AZUL)
 		self.rect = self.image.get_rect()
 		self.x = x
 		self.y = y

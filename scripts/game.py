@@ -72,6 +72,7 @@ class Game():
 		self.img_virus = pg.transform.scale(self.img_virus, (TAMAÑO_TILE, TAMAÑO_TILE))
 		self.spritesheet_bot = Spritesheet(os.path.join(carpeta_gfx, SPRITESHEETS["bot"]))
 		self.spritesheet_brain = Spritesheet(os.path.join(carpeta_player, SPRITESHEET_BRAIN))
+		self.spritesheet_araña = Spritesheet(os.path.join(carpeta_enemigos, SPRITESHEET_ARAÑA))
 		
 
 	def cargar_nivel(self):
@@ -111,6 +112,7 @@ class Game():
 		self.pantalla.fill(CELESTE) # lleno la pantalla de fondo celeste
 
 		timer(self.pantalla, 50, 10, self.control_tiempo / self.tiempo_final)
+		timer(self.pantalla, 50, 100, self.player.stamina / 100)
 
 		#descomentar para ver la grilla
 		#self.dibujar_grilla()
@@ -193,6 +195,9 @@ class Game():
 				elif tile == "S":
 					if random.randrange(100) < PROB_PAD_SALTO:
 						PadSalto(self, col, fila)
+				elif tile == "C":
+					if random.randrange(100) < PROB_COMBOTRON:
+						Combotron(self, col, fila)
 
 
 
@@ -230,7 +235,7 @@ class Game():
 		self.control_tiempo = pg.time.get_ticks()
 		#print(self.control_tiempo)
 		if self.tiempo_final - self.control_tiempo <= 0:
-			print("tiempo: {0} -- tiempofinal: {1} -- timeout".format(self.control_tiempo, self.tiempo_final))
+			#print("tiempo: {0} -- tiempofinal: {1} -- timeout".format(self.control_tiempo, self.tiempo_final))
 			self.jugando = False
 
 		if self.player.pos.y > 2000:
@@ -245,18 +250,20 @@ class Game():
 					self.tiempo_final += TIEMPO_NIVEL					
 					self.nuevo_juego()
 
-		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, True, pg.sprite.collide_mask)
+		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, False)
 		for enemigo in colision_enemigo_bot:
 			if enemigo.type == "BotAraña":
 				if enemigo.vivo:
-					self.player.lastimar(DANIO_BOT)			
+					enemigo.morir()
+					self.tiempo_final -= 10000			
 
 
 		colision_enemigo_av = pg.sprite.spritecollide(self.player, self.antivirus, False, pg.sprite.collide_mask)
 		for enemigo in colision_enemigo_av:		
 			if enemigo.type == "Antivirus":
 				if enemigo.vivo == True:
-					self.player.lastimar(DANIO_AV)
+					enemigo.morir()									
+					self.tiempo_final -= 3000
 
 		if self.player.vida <= 0:
 			#pg.time.wait(2000)
@@ -275,7 +282,11 @@ class Game():
 				self.player.acelerar()
 			elif item.type == "saltar":
 				# insertar sonido
-				self.player.pad_salto()			
+				self.player.pad_salto()
+			elif item.type == "combotron":
+				self.player.stamina += 20
+				if self.player.stamina > 100:
+					self.player.stamina = 100			
 
 
 	def jugar(self):

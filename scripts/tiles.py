@@ -75,8 +75,8 @@ class PlataformaTrampa(pg.sprite.Sprite):
 	def update(self):
 		pos_original = self.rect.y
 		if self.pisada:
-			self.kill()
-			#self.rect.y += 5
-			#if self.rect.y - pos_original > 100:
-			#	print(str(self.rect.y - pos_original))
-			#	self.kill()
+			#self.kill()
+			self.rect.y += 5
+			if self.rect.y - pos_original > 100:
+				print(str(self.rect.y - pos_original))
+				self.kill()

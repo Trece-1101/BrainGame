@@ -55,7 +55,7 @@ class PlayerOne(pg.sprite.Sprite):
 		self.ultimo_update = 0
 		self.cargar_imagenes()
 		#self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		#self.image.fill(AZUL)
+		#self.image.fill(ROJO)
 		self.image = self.cuadros_idle[0]
 		self.rect = self.image.get_rect()
 		self.vel = vec2(0, 0)
@@ -215,9 +215,9 @@ class Botaraña(pg.sprite.Sprite):
 		self.ultimo_update = 0
 		self.type = items["B"]
 		self.cargar_imagenes()
-		#self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image = self.cuadro_idle[0]
-		#self.image.fill(ROJO)
+		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
+		#self.image = self.cuadros_idle[0]
+		self.image.fill(ROJO)
 		self.rect = self.image.get_rect()
 		self.vel = vec2(0, 0)
 		self.acel = vec2(0, 0)
@@ -225,9 +225,16 @@ class Botaraña(pg.sprite.Sprite):
 		self.rect.center = self.pos
 		self.acel = vec2(0, 0)
 		self.vivo = True
+		self.idle = True
+		self.mascara_col = pg.mask.from_surface(self.image)
 
 	def cargar_imagenes(self):
-		self.cuadro_idle = [self.game.spritesheet_bot.get_imagen(1, 1, 1018, 971)]
+		self.cuadros_idle = [self.game.spritesheet_bot.get_imagen(128, 50, 56, 52),
+							self.game.spritesheet_bot.get_imagen(183, 154, 56 ,50),
+							self.game.spritesheet_bot.get_imagen(186, 50, 56, 50),
+							self.game.spritesheet_bot.get_imagen(183, 104, 56, 48)]
+
+
 		#self.cuadros_correr_d = [self.game.img_av_run1,
 		#					self.game.img_av_run1]			
 
@@ -244,16 +251,22 @@ class Botaraña(pg.sprite.Sprite):
 		#for cuadro in self.cuadros_correr_i:
 		#	cuadro.set_colorkey(NEGRO)
 
-		for cuadro in self.cuadro_idle:
-			cuadro.set_colorkey(NEGRO)
+		#for cuadro in self.cuadros_idle:
+		#	cuadro.set_colorkey(NEGRO)
 
 		
 
 
 	def animar(self):
-		pass
-		'''este_instante = pg.time.get_ticks()
-		if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
+		este_instante = pg.time.get_ticks()
+
+		if self.idle:
+			if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
+				self.ultimo_update = este_instante
+				self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_idle)
+				self.image = self.cuadros_idle[self.cuadro_actual]
+		else:
+			if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
 				self.ultimo_update = este_instante
 				self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_correr_d)				
 				if self.vel.x > 0:
@@ -262,7 +275,12 @@ class Botaraña(pg.sprite.Sprite):
 					self.image = self.cuadros_correr_i[self.cuadro_actual]
 
 		# mascara de colision
-		self.mascara_col = pg.mask.from_surface(self.image)'''
+		self.mascara_col = pg.mask.from_surface(self.image)
+
+	def morir(self):
+		self.vel.x = 0
+		self.vivo = False
+		self.animar()
 
 
 
@@ -276,10 +294,8 @@ class Botaraña(pg.sprite.Sprite):
 			#print("detectado")
 			if dist_obj[0] > 0:             
 				self.acel.x -= choice(VEL_BOT)
-				#self.vel.y = -400
 			else:
 				self.acel.x += choice(VEL_BOT)
-				#self.vel.y = -400
 		else:
 			self.acel.x = 0				
 			#print("no detectado")
