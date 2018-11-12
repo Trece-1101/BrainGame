@@ -8,25 +8,28 @@ from scripts.personajes import *
 from scripts.tiles import *
 from scripts.camara import *
 from scripts.item import *
+from scripts.menus import *
 
 # GUI
-def timer(sup, x, y, pct):
+def gui(pantalla, x, y, pct, color_lleno, color_medio, color_vacio, texto):
 	if pct < 0:
 		pct = 0
+	elif pct > 100:
+		pct = 100
 	ancho = 100
-	alto = 20
+	alto = 40
 	relleno = pct * ancho
 	borde = pg.Rect(x, y, ancho, alto)
 	relleno_rect = pg.Rect(x, y, relleno, alto)
 	if pct >= 0.8:
-		color = ROJO
+		color = color_lleno
 	elif pct > 0.3 and pct < 0.8:
-		color = AMARILLO
+		color = color_medio
 	else:
-		color = VERDE
-	pg.draw.rect(sup, color, relleno_rect)
-	pg.draw.rect(sup, BLANCO, borde, 2)
-
+		color = color_vacio
+	pg.draw.rect(pantalla, color, relleno_rect)
+	pg.draw.rect(pantalla, BLANCO, borde, 2)
+	dibujar_texto(pantalla, texto, 18, NEGRO, x + 55, y + 45)
 
 
 class Game():
@@ -38,19 +41,23 @@ class Game():
 		self.pantalla = pg.display.set_mode((ANCHO, ALTO)) # tamaño de la ventana del juego
 		pg.display.set_caption(TITULO) # titulo que aparece en la ventana
 		self.FPSclock = pg.time.Clock()
-		self.run = True # bool para determinar si el juego (la ventana) va a seguir abierta
-		self.jugando = True # bool para determinar el game_over o no
-		self.fuente = pg.font.match_font(FUENTE)
+		#self.run = True # bool para determinar si el juego (la ventana) va a seguir abierta
+		menu = menu_principal(self.pantalla, self.FPSclock)
+		self.run = menu[0]	
+		#self.run = menu_principal(self.pantalla, self.FPSclock)
+		self.jugando = True # bool para determinar el game_over o no	
+		self.fuente = pg.font.match_font(FUENTE)	
 		self.cargar_datos()
 		self.pausado = False
-		self.tiempo_final = TIEMPO_NIVEL
+		self.tiempo_final = TIEMPO_NIVEL * menu[1]
 		self.control_tiempo = 0
-		self.nivel = 3
+		self.c_niveles = 1
+		
 
 	def cargar_datos(self):
 		# metodo para cargar datos desde archivos
-		self.pantalla_pausa = pg.Surface(self.pantalla.get_size()).convert_alpha()
-		self.pantalla_pausa.fill((0, 0, 0, 180))
+		#self.pantalla_pausa = pg.Surface(self.pantalla.get_size()).convert_alpha()
+		#self.pantalla_pausa.fill((0, 0, 0, 180))
 
 		carpeta_player = Path("gfx/Brain")
 		carpeta_enemigos = Path("gfx/enemigos")
@@ -73,12 +80,63 @@ class Game():
 		self.spritesheet_bot = Spritesheet(os.path.join(carpeta_gfx, SPRITESHEETS["bot"]))
 		self.spritesheet_brain = Spritesheet(os.path.join(carpeta_player, SPRITESHEET_BRAIN))
 		self.spritesheet_araña = Spritesheet(os.path.join(carpeta_enemigos, SPRITESHEET_ARAÑA))
-		
 
-	def cargar_nivel(self):
+
+		# sonidos
+		self.carpeta_sonidos = Path("sfx")
+
+		self.sonido_salto = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto"]))
+		self.sonido_salto_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto_boost"]))
+		self.sonido_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["boost"]))
+		self.sonido_lastimado = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimado"]))
+		self.sonido_muerteNPC = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimados_npc"]))
+		self.sonido_tiempo_limite = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempo_limite"]))
+		#pg.mixer.music.fadeout(500)
+
+
+		# crear una secuencia de 10 niveles aleatorios
+		# 3 faciles
+		# 3 medios
+		# 3 dificiles
+		# 1 final
+
+		self.sec_niveles = []
+		x = 0
+		while x < 3:
+			nivel = random.randint(1, 5)
+			if nivel not in self.sec_niveles:
+				self.sec_niveles.append(nivel)	
+				x += 1
+		x = 0		
+
+		while x < 3:
+			nivel = random.randint(6, 10)
+			if nivel not in self.sec_niveles:
+				self.sec_niveles.append(nivel)	
+				x += 1
+		x = 0	
+
+		while x < 3:
+			nivel = random.randint(11, 15)
+			if nivel not in self.sec_niveles:
+				self.sec_niveles.append(nivel)	
+				x += 1
+
+		nivel = random.randint(16, 17)
+		self.sec_niveles.append(nivel)
+		#print(self.sec_niveles)
+				
+
+	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
-		self.mapa = Mapa(carpeta_mapas / "mapa{}.txt".format(self.nivel))
+		self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
+		print(nivel)
 		self.mapear()
+
+	def musica_random(self):
+		#random.choice[self.musica]
+		pg.mixer.music.load(os.path.join(self.carpeta_sonidos, random.choice(SFX["musica"])))
+		pg.mixer.music.play(loops=-1)
 
 
 	def eventos(self):
@@ -89,7 +147,9 @@ class Game():
 			if evento.type == pg.KEYDOWN:
 				if evento.key == pg.K_ESCAPE:
 					self.quit()
+					sys.exit(0)
 				if evento.key == pg.K_SPACE:
+					self.sonido_salto.play()
 					self.player.saltar()
 				if evento.key == pg.K_p:
 					self.pausado = not self.pausado
@@ -111,8 +171,13 @@ class Game():
 		
 		self.pantalla.fill(CELESTE) # lleno la pantalla de fondo celeste
 
-		timer(self.pantalla, 50, 10, self.control_tiempo / self.tiempo_final)
-		timer(self.pantalla, 50, 100, self.player.stamina / 100)
+		pct_scan = self.control_tiempo / self.tiempo_final
+		if pct_scan > 0.9:
+			self.sonido_tiempo_limite.play()
+		pct_scan_mod = str(round(pct_scan * 100, 1))
+		pct_stamina = self.player.stamina / 100
+		gui(self.pantalla, 50, 10, pct_scan, ROJO, AMARILLO, VERDE, "Escaneando {0} %".format(pct_scan_mod))
+		gui(self.pantalla, 50, 100, pct_stamina, VERDE, AMARILLO, ROJO, "Stamina {0}".format(self.player.stamina))
 
 		#descomentar para ver la grilla
 		#self.dibujar_grilla()
@@ -123,13 +188,13 @@ class Game():
 			self.pantalla.blit(sprite.image, self.camara.aplicar_camara(sprite))
 	
 
-		if self.pausado:
-			self.pantalla.blit(self.pantalla_pausa, (0, 0))
-			self.dibujar_texto("Paused", 22, ROJO, MITAD_ANCHO, MITAD_ALTO)
+		if self.pausado:		
+			self.pantalla.blit(pantalla_pausa(self.pantalla), (0,0))
+			
 					
 		pg.display.flip()
 
-	def stop(self):
+	'''def stop(self):
 		# metodo para esperar el input de usuario en pantalla principal y de game_over
 		esperar = True
 		while esperar:
@@ -146,9 +211,19 @@ class Game():
 						esperar = False
 						run = True
 
-		return run
+		return run'''
 
-	def menu_principal(self):
+	'''def fade(self): 
+		fade = pg.Surface((ANCHO, ALTO))
+		fade.fill((0,0,0))
+		for alpha in range(0, 300):
+			fade.set_alpha(alpha)
+			#self.dibujar()
+			self.pantalla.blit(fade, (0,0))
+			pg.display.update()
+			pg.time.delay(2)'''
+
+	'''def menu_principal(self):
 		# pantalla de menu principal
 		#pg.mixer.music.play(loops = -1)
 		self.pantalla.fill(CELESTE)
@@ -158,19 +233,19 @@ class Game():
 		self.dibujar_texto("Presione una tecla para continuar", 22, BLANCO, MITAD_ANCHO, ALTO * 3/4)
 		pg.display.flip()
 		run = self.stop()
-		return run
+		return run'''
 
-	def game_over(self):
+	'''def game_over(self):
 		# pantalla de menu para volver a jugar
-		self.quit()
+		self.quit()'''
 
-	def dibujar_texto(self, texto, tamaño, color, x, y, align="topleft"):
+	'''def dibujar_texto(self, texto, tamaño, color, x, y, align="topleft"):
 		# metodo para recibir un string y dibujarlo en pantalla
 		font = pg.font.Font(self.fuente, tamaño)
 		texto_surface = font.render(texto, True, color)
 		texto_rect = texto_surface.get_rect()
 		texto_rect.midtop = (x, y)
-		self.pantalla.blit(texto_surface, texto_rect)	
+		self.pantalla.blit(texto_surface, texto_rect)'''
 
 	def mapear(self):
 		# metodo para tomar un .txt y convertirlo en mapa
@@ -199,9 +274,7 @@ class Game():
 					if random.randrange(100) < PROB_COMBOTRON:
 						Combotron(self, col, fila)
 
-
-
-
+	
 
 	def nuevo_juego(self):
 		# cada vez que se inicia o reinicia el juego, no la ventana
@@ -213,10 +286,12 @@ class Game():
 		self.bots = pg.sprite.Group()
 		self.portales = pg.sprite.Group()
 		self.fondos = pg.sprite.Group()
+
+		# musica
+		self.musica_random()			
 		
 		# instanciar el mapa
-		#self.mapear()
-		self.cargar_nivel()
+		self.cargar_nivel(self.sec_niveles[0])
 		
 		# instanciamos la camara con los valores del mapa que salen en la carga de datos
 		self.camara = Camara(self,self.mapa.ancho, self.mapa.alto)
@@ -242,22 +317,35 @@ class Game():
 			print("caida")
 			self.nuevo_juego()
 
+
+
+		# colision con el portal para pasar de nivel
 		colision_portal = pg.sprite.spritecollide(self.player, self.portales, False)
 		if colision_portal:
 			for portal in colision_portal:
 				if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
-					self.nivel += 1
-					self.tiempo_final += TIEMPO_NIVEL					
-					self.nuevo_juego()
+					if self.c_niveles < 10:
+						print("niveles_jugados {0}".format(self.c_niveles))
+						self.c_niveles += 1
+						self.tiempo_final += TIEMPO_NIVEL
+						self.sec_niveles.pop(0)				
+						self.nuevo_juego()
+					else:
+						print("ganaste")
+						sys.exit(0)
 
+
+		# colision con botaraña, quita 3 segundos
 		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, False)
 		for enemigo in colision_enemigo_bot:
 			if enemigo.type == "BotAraña":
 				if enemigo.vivo:
 					enemigo.morir()
-					self.tiempo_final -= 10000			
+					self.sonido_lastimado.play()
+					self.tiempo_final -= 3000			
 
 
+		# colision con el antivirus, quita 3 segundos
 		colision_enemigo_av = pg.sprite.spritecollide(self.player, self.antivirus, False, pg.sprite.collide_mask)
 		for enemigo in colision_enemigo_av:		
 			if enemigo.type == "Antivirus":
@@ -265,23 +353,22 @@ class Game():
 					enemigo.morir()									
 					self.tiempo_final -= 3000
 
-		if self.player.vida <= 0:
-			#pg.time.wait(2000)
-			self.jugando = False
-
+		# colision entre el anvivirus y la botaraña, muerte el antivirus
 		for av in self.antivirus:
 			colision = pg.sprite.spritecollide(av, self.bots, False)
 			if colision:
+				self.sonido_muerteNPC.play()
 				av.morir()		
 
 
+		# colision con los distintos items
 		colision_item = pg.sprite.spritecollide(self.player, self.items, True)
 		for item in colision_item:
 			if item.type == "acelerar":
-				#self.sfx_boost.play()
+				self.sonido_boost.play()
 				self.player.acelerar()
 			elif item.type == "saltar":
-				# insertar sonido
+				self.sonido_salto_boost.play()
 				self.player.pad_salto()
 			elif item.type == "combotron":
 				self.player.stamina += 20
@@ -291,7 +378,7 @@ class Game():
 
 	def jugar(self):
 		# loop principal del juego, este metodo esta integrado por los metodos principales
-		#pg.mixer.music.play(loops = -1) # musica principal del juego en loop infinito
+		pg.mixer.music.play(loops = -1) # musica principal del juego en loop infinito
 		#self.jugando = True
 		while self.jugando:			
 			self.dt = self.FPSclock.tick(FPS) / 1000
@@ -300,7 +387,4 @@ class Game():
 				self.update()			
 			self.dibujar()
 		pg.mixer.music.fadeout(800)
-		self.game_over()
-
-
-Game()
+		menus.game_over()

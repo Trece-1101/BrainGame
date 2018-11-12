@@ -4,13 +4,14 @@ import pygame as pg
 
 # Pantalla
 TITULO = "Mi juego"
-ANCHO = 1024
-ALTO = 640
+ANCHO = 1440
+ALTO = 896
 MITAD_ANCHO = ANCHO / 2
 MITAD_ALTO = ALTO / 2
 FPS = 60
 ACTUALIZACION_CUADROS = 150
 FUENTE = "arial"
+IMG_MENU = {"titulo": "star_title.png", "fondo": "Virus_Fondo.png"}
 
 # Constantes Personaje
 vec2 = pg.math.Vector2 # vector2 para movimiento y posicion
@@ -26,7 +27,14 @@ PLAYER_VIDA_INICIAL = 50
 PLAYER_IMG = ""
 SPRITESHEET_BRAIN = "sprites.png"
 UMBRAL_CORRER = 50
+
+# Dificultades
 TIEMPO_NIVEL = 30000
+DIFICULTAD_IMPOSIBLE = 0.4
+DIFICULTAD_HARD = 0.8
+DIFICULTAD_NORMAL = 1
+DIFICULTAD_FACIL = 1.2
+DIFICULTAD_BATY = 1.5
 
 # Capas
 FONDO_LAYER = 0
@@ -47,8 +55,8 @@ CELESTE = (0, 155, 155)
 
 # Tiles
 TAMAÑO_TILE = 32
-ANCHO_GRILLA = ANCHO / TAMAÑO_TILE #  32 ancho
-ALTO_GRILLA = ALTO / TAMAÑO_TILE # 20 alto
+ANCHO_GRILLA = ANCHO / TAMAÑO_TILE # 1024 = 32 ancho;  1440 = 45 ancho
+ALTO_GRILLA = ALTO / TAMAÑO_TILE # 640 = 20 alto; 896 = 28 alto
 OFFSETX_CAMARA = 200
 
 # Items
@@ -86,3 +94,16 @@ IMG_ENEMIGOS = {"av_idle": "avIdle.png",
 
 SPRITESHEETS = {"bot": "Prueba_sprite.png"}
 SPRITESHEET_ARAÑA = "araña.png"
+
+
+# sonidos
+SFX = {"musica_menu": "menu.ogg", 
+		"musica": ["musica1.wav", "musica2.wav", "musica3.wav", "musica4.wav"],
+		"musica_creditos": "creditos.wav",
+		"boost": "boost.wav",
+		"itembinario": "itembinario.wav",
+		"lastimado": "lastimado.wav",
+		"lastimados_npc": "lastimados_NPC.wav",
+		"salto": "salto.wav",
+		"salto_boost": "salto_boost.wav",
+		"tiempo_limite": "tiempolimite.wav"}
