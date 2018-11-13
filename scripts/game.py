@@ -42,57 +42,59 @@ class Game():
 		pg.display.set_caption(TITULO) # titulo que aparece en la ventana
 		self.FPSclock = pg.time.Clock()
 		#self.run = True # bool para determinar si el juego (la ventana) va a seguir abierta
-		menu = menu_principal(self.pantalla, self.FPSclock)
-		self.run = menu[0]	
+		iniciar = menu(self.pantalla, self.FPSclock, MUSICA_MENU_PRINCIPAL, IMAGEN_MENU_PRINCIPAL, FONDO_MENU_PRINCIPAL, INSTRUCCIONES_MENU_PRINCIPAL)
+		self.run = iniciar[0]	
 		#self.run = menu_principal(self.pantalla, self.FPSclock)
 		self.jugando = True # bool para determinar el game_over o no	
 		self.fuente = pg.font.match_font(FUENTE)	
 		self.cargar_datos()
 		self.pausado = False
-		self.tiempo_final = TIEMPO_NIVEL * menu[1]
+		self.tiempo_final = TIEMPO_NIVEL * iniciar[1]
 		self.control_tiempo = 0
 		self.c_niveles = 1
 		
 
 	def cargar_datos(self):
-		# metodo para cargar datos desde archivos
-		#self.pantalla_pausa = pg.Surface(self.pantalla.get_size()).convert_alpha()
-		#self.pantalla_pausa.fill((0, 0, 0, 180))
+		# metodo para cargar datos desde archivos				
+		try:
+			# imagenes			
 
-		carpeta_player = Path("gfx/Brain")
-		carpeta_enemigos = Path("gfx/enemigos")
-		self.carpeta_fondos = Path("gfx/fondos")
-		carpeta_gfx = Path("gfx")
+			# player
+			self.img_virus = pg.image.load(os.path.join(CARPETA_IMAGENES, IMG_ENEMIGOS["prueba2"])).convert_alpha()
+			self.img_virus = pg.transform.scale(self.img_virus, (TAMAÑO_TILE, TAMAÑO_TILE))
+			self.spritesheet_brain = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET_BRAIN))
 
-		#self.img_fondos = []
-		#for i in range(1, 4):
-		#	self.img_fondos.append(pg.image.load(os.path.join(carpeta_fondos, "{0}.png".format(i))))		
+			# enemigos
+			self.img_av_idle = pg.image.load(os.path.join(CARPETA_IMAGENES, IMG_ENEMIGOS["av_idle"])).convert_alpha()
+			self.img_av_idle = pg.transform.scale(self.img_av_idle, (TAMAÑO_TILE, TAMAÑO_TILE))
+			self.img_av_run1 = pg.image.load(os.path.join(CARPETA_IMAGENES, IMG_ENEMIGOS["av_run1"])).convert_alpha()
+			self.img_av_run1 = pg.transform.scale(self.img_av_run1, (TAMAÑO_TILE, TAMAÑO_TILE))
+			self.img_av_muerto = pg.transform.rotate(self.img_av_idle, 180)
+			self.spritesheet_bot = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEETS["bot"]))		
+			self.spritesheet_araña = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET_ARAÑA))
 
-		self.img_av_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["av_idle"])).convert_alpha()
-		self.img_av_idle = pg.transform.scale(self.img_av_idle, (TAMAÑO_TILE, TAMAÑO_TILE))
-		self.img_av_run1 = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["av_run1"])).convert_alpha()
-		self.img_av_run1 = pg.transform.scale(self.img_av_run1, (TAMAÑO_TILE, TAMAÑO_TILE))
-		self.img_av_muerto = pg.transform.rotate(self.img_av_idle, 180)
-		#self.img_bot_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["bot_idle"])).convert_alpha()
-		#self.img_bot_idle = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["prueba"])).convert_alpha()
-		self.img_virus = pg.image.load(os.path.join(carpeta_enemigos, IMG_ENEMIGOS["prueba2"])).convert_alpha()
-		self.img_virus = pg.transform.scale(self.img_virus, (TAMAÑO_TILE, TAMAÑO_TILE))
-		self.spritesheet_bot = Spritesheet(os.path.join(carpeta_gfx, SPRITESHEETS["bot"]))
-		self.spritesheet_brain = Spritesheet(os.path.join(carpeta_player, SPRITESHEET_BRAIN))
-		self.spritesheet_araña = Spritesheet(os.path.join(carpeta_enemigos, SPRITESHEET_ARAÑA))
+			# items
 
 
-		# sonidos
-		self.carpeta_sonidos = Path("sfx")
+			# sonidos
+			self.carpeta_sonidos = Path("sfx")
 
-		self.sonido_salto = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto"]))
-		self.sonido_salto_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto_boost"]))
-		self.sonido_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["boost"]))
-		self.sonido_lastimado = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimado"]))
-		self.sonido_muerteNPC = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimados_npc"]))
-		self.sonido_tiempo_limite = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempo_limite"]))
-		#pg.mixer.music.fadeout(500)
-
+			# acciones
+			self.sonido_salto = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto"]))		
+			self.sonido_lastimado = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimado"]))
+			self.sonido_muerteNPC = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimados_npc"]))
+			self.sonido_portal = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["portal"]))
+			# tiempo
+			self.sonido_tiempo_limite = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempo_limite"]))		
+			# items
+			self.sonido_salto_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto_boost"]))
+			self.sonido_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["boost"]))
+			self.sonido_combotron = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["combotron"]))
+			self.sonido_tiempotron = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempotron"]))
+			#pg.mixer.music.fadeout(500)
+		except Exception as e:
+			print(e)
+	
 
 		# crear una secuencia de 10 niveles aleatorios
 		# 3 faciles
@@ -129,12 +131,12 @@ class Game():
 
 	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
-		self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
+		#self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
+		self.mapa = Mapa(carpeta_mapas / "nivel2.txt")
 		print(nivel)
 		self.mapear()
 
 	def musica_random(self):
-		#random.choice[self.musica]
 		pg.mixer.music.load(os.path.join(self.carpeta_sonidos, random.choice(SFX["musica"])))
 		pg.mixer.music.play(loops=-1)
 
@@ -146,11 +148,12 @@ class Game():
 				self.quit()
 			if evento.type == pg.KEYDOWN:
 				if evento.key == pg.K_ESCAPE:
-					self.quit()
 					sys.exit(0)
 				if evento.key == pg.K_SPACE:
 					self.sonido_salto.play()
 					self.player.saltar()
+				if evento.key == pg.K_LSHIFT:
+					self.sonido_boost.play()
 				if evento.key == pg.K_p:
 					self.pausado = not self.pausado
 			if evento.type == pg.KEYUP:
@@ -194,58 +197,6 @@ class Game():
 					
 		pg.display.flip()
 
-	'''def stop(self):
-		# metodo para esperar el input de usuario en pantalla principal y de game_over
-		esperar = True
-		while esperar:
-			self.FPSclock.tick(FPS)
-			for evento in pg.event.get():
-				if evento.type == pg.QUIT:
-					esperar = False
-					run = False
-				if evento.type == pg.KEYUP:
-					if evento.key == pg.K_ESCAPE:
-						esperar = False
-						run = False
-					else:
-						esperar = False
-						run = True
-
-		return run'''
-
-	'''def fade(self): 
-		fade = pg.Surface((ANCHO, ALTO))
-		fade.fill((0,0,0))
-		for alpha in range(0, 300):
-			fade.set_alpha(alpha)
-			#self.dibujar()
-			self.pantalla.blit(fade, (0,0))
-			pg.display.update()
-			pg.time.delay(2)'''
-
-	'''def menu_principal(self):
-		# pantalla de menu principal
-		#pg.mixer.music.play(loops = -1)
-		self.pantalla.fill(CELESTE)
-		self.dibujar_texto(TITULO, 48, BLANCO, MITAD_ANCHO, ALTO / 4)
-		#self.dibujar_texto("Puntaje maximos: " + str(self.max_puntaje), 22, BLANCO, MITAD_ANCHO, ALTO * 1/3)
-		self.dibujar_texto("Flechas para mover, espacio para saltar", 22, BLANCO, MITAD_ANCHO, MITAD_ALTO)
-		self.dibujar_texto("Presione una tecla para continuar", 22, BLANCO, MITAD_ANCHO, ALTO * 3/4)
-		pg.display.flip()
-		run = self.stop()
-		return run'''
-
-	'''def game_over(self):
-		# pantalla de menu para volver a jugar
-		self.quit()'''
-
-	'''def dibujar_texto(self, texto, tamaño, color, x, y, align="topleft"):
-		# metodo para recibir un string y dibujarlo en pantalla
-		font = pg.font.Font(self.fuente, tamaño)
-		texto_surface = font.render(texto, True, color)
-		texto_rect = texto_surface.get_rect()
-		texto_rect.midtop = (x, y)
-		self.pantalla.blit(texto_surface, texto_rect)'''
 
 	def mapear(self):
 		# metodo para tomar un .txt y convertirlo en mapa
@@ -273,6 +224,9 @@ class Game():
 				elif tile == "C":
 					if random.randrange(100) < PROB_COMBOTRON:
 						Combotron(self, col, fila)
+				elif tile == "T":
+					if random.randrange(100) < PROB_TIEMPOTRON:
+						Tiempotron(self, col, fila)
 
 	
 
@@ -305,13 +259,13 @@ class Game():
 		# la camara sigue al jugador
 		self.camara.update(self.player)
 
-		#print(self.player.pos.y)
 
 		self.control_tiempo = pg.time.get_ticks()
 		#print(self.control_tiempo)
 		if self.tiempo_final - self.control_tiempo <= 0:
 			#print("tiempo: {0} -- tiempofinal: {1} -- timeout".format(self.control_tiempo, self.tiempo_final))
 			self.jugando = False
+
 
 		if self.player.pos.y > 2000:
 			print("caida")
@@ -325,7 +279,8 @@ class Game():
 			for portal in colision_portal:
 				if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
 					if self.c_niveles < 10:
-						print("niveles_jugados {0}".format(self.c_niveles))
+						#print("niveles_jugados {0}".format(self.c_niveles))
+						self.sonido_portal.play()
 						self.c_niveles += 1
 						self.tiempo_final += TIEMPO_NIVEL
 						self.sec_niveles.pop(0)				
@@ -335,28 +290,29 @@ class Game():
 						sys.exit(0)
 
 
-		# colision con botaraña, quita 3 segundos
+		# colision con botaraña, quita segundos
 		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, False)
 		for enemigo in colision_enemigo_bot:
 			if enemigo.type == "BotAraña":
-				if enemigo.vivo:
-					enemigo.morir()
+				if enemigo.vivo:					
 					self.sonido_lastimado.play()
-					self.tiempo_final -= 3000			
+					enemigo.morir()
+					self.tiempo_final -= DANIO_BOT			
 
 
-		# colision con el antivirus, quita 3 segundos
+		# colision con el antivirus, segundos
 		colision_enemigo_av = pg.sprite.spritecollide(self.player, self.antivirus, False, pg.sprite.collide_mask)
 		for enemigo in colision_enemigo_av:		
 			if enemigo.type == "Antivirus":
 				if enemigo.vivo == True:
+					self.sonido_lastimado.play()
 					enemigo.morir()									
-					self.tiempo_final -= 3000
+					self.tiempo_final -= DANIO_AV
 
-		# colision entre el anvivirus y la botaraña, muerte el antivirus
+		# colision entre el anvivirus y la botaraña, muere el antivirus
 		for av in self.antivirus:
 			colision = pg.sprite.spritecollide(av, self.bots, False)
-			if colision:
+			if colision and av.vivo:
 				self.sonido_muerteNPC.play()
 				av.morir()		
 
@@ -371,10 +327,17 @@ class Game():
 				self.sonido_salto_boost.play()
 				self.player.pad_salto()
 			elif item.type == "combotron":
-				self.player.stamina += 20
+				self.sonido_combotron.play()
+				self.player.stamina += BOOST_COMBOTRON
 				if self.player.stamina > 100:
-					self.player.stamina = 100			
+					self.player.stamina = 100
+			elif item.type == "tiempotron":
+				self.sonido_tiempotron.play()
+				self.tiempo_final += BOOST_TIEMPOTRON
 
+	def game_over(self):
+		res = menu(self.pantalla, self.FPSclock, MUSICA_GAME_OVER, IMAGEN_MENU_PRINCIPAL, FONDO_MENU_PRINCIPAL, INSTRUCCIONES_GAME_OVER)
+		return res[0]
 
 	def jugar(self):
 		# loop principal del juego, este metodo esta integrado por los metodos principales
@@ -387,4 +350,4 @@ class Game():
 				self.update()			
 			self.dibujar()
 		pg.mixer.music.fadeout(800)
-		menus.game_over()
+		

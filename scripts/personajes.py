@@ -183,14 +183,9 @@ class PlayerOne(pg.sprite.Sprite):
 
 		elif tecla[pg.K_RIGHT] and not tecla[pg.K_LEFT]:
 			self.acel.x = PLAYER_ACEL
-			self.sentido = "D"
-
-
-		if tecla[pg.K_SPACE]:
-			pass					
+			self.sentido = "D"	
 	
 		if tecla[pg.K_LSHIFT]:
-			self.game.sonido_boost.play()
 			if self.sentido == "D" and self.stamina > 0:
 				self.acel.x = PLAYER_ACEL * PLAYER_DASH
 				self.stamina -= 1

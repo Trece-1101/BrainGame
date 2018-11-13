@@ -1,0 +1,19 @@
+P = Player
+X = Portal
+---
+B = Botaraña
+V = Antivirus
+---
+A = Acelerador
+S = Pad Salto
+C = Combotron
+T = Tiempo
+
+
+
+----------------
+
+10 lineas para arriba ya no llega con el salto, 9 es el salto maximo
+17 lineas para adelante ya no llega con el salto, 16 es el salto maximo
+saltando hacia adelante y para arriba son 8x8 lineas
+no poner plataformas por encima de la linea 10

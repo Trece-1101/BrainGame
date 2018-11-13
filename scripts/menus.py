@@ -1,75 +1,9 @@
 import pygame as pg
 import os
-from pathlib import Path
 from scripts.parametros import *
 from scripts.game import *
 
-
-def MenuPrincipal2():
-	# pantalla de menu principal
-
-	#pg.mixer.music.play(loops = -1)
-
-	gfx = Path("gfx")
-
-	os.environ['SDL_VIDEO_CENTERED'] = '1'
-
-
-	pantalla = pygame.display.set_mode((ANCHO, ALTO))
-
-	pg.display.set_caption(TITULO)
-	fuente = pg.font.Font(FUENTE , 20)
-
-	# Imagen principal que sirve de titulo
-	img_titulo = IMG_MENU['titulo'].get_rect()
-	titulo_top = 50
-	img_titulo.top = topCoord
-	img_titulo.centerx = MITAD_ANCHO
-	titulo_top += img_titulo.height
-
-	img_fondo= IMG_MENU["fondo"].get_rect()
-	fondoRect.top = 0
-	img_fondo.centerx = MITAD_ANCHO
-
-	# Pasar las instrucciones como una lista para controlar las lineas
-	instrucciones = ["Flechas para moverse (<- ->)",
-					   "Tecla [ESPACIO] para saltar",
-					   "Tecla [SHIFT] para acelerar (dash)",
-					   "J para Jugar",
-					   "P para pausar",
-					   "ESC para salir"]
-
-	pantalla.fill(CELESTE)
-
-	pantalla.blit(IMG_MENU['fondo_titulo'], fondoRect)
-	pantalla.blit(IMG_MENU['titulo'], titleRect)
-
-	# Position and draw the text.
-	for i in range(len(instrucciones)):
-		inst = BASICFONT.render(instrucciones[i], 1, NEGRO)
-		instRect = inst.get_rect()
-		top += 10 # 10 pixeles entre linea y linea
-		instRect.top = topCoord
-		instRect.centerx = MITAD_ANCHO
-		top += instRect.height
-		pantalla.blit(inst, instRect)
-
-	while True:
-		for event in pygame.event.get():
-			if event.type == QUIT:
-				salir()
-			elif event.type == KEYDOWN:
-				if event.key == K_ESCAPE:
-					salir()
-				elif even.key == K_j:
-					return "jugar"
-
-
-		pg.display.update()
-		FPSCLOCK.tick()
-
-
-def stop(clock):
+def stop(pantalla, clock):
 	# metodo para esperar el input de usuario en pantalla principal y de game_over
 	esperar = True
 	while esperar:
@@ -78,10 +12,12 @@ def stop(clock):
 			if evento.type == pg.QUIT:
 				esperar = False
 				run = False
+				dificultad = 0
 			if evento.type == pg.KEYUP:
 				if evento.key == pg.K_ESCAPE:
 					esperar = False
 					run = False
+					dificultad = 0
 				elif evento.key == pg.K_d:
 					esperar = False
 					run = True
@@ -94,39 +30,43 @@ def stop(clock):
 					esperar = False
 					run = True
 					dificultad = DIFICULTAD_NORMAL
+				elif evento.key == pg.K_c:
+					menu(pantalla, clock, MUSICA_GAME_OVER, IMAGEN_MENU_PRINCIPAL, FONDO_MENU_PRINCIPAL, INSTRUCCIONES_CREDITOS)
 
 	return [run, dificultad]
 
-def menu_principal(pantalla, clock):
+def fade(pantalla): 
+	fade = pg.Surface((ANCHO, ALTO))
+	fade.fill((0,0,0))
+	for alpha in range(0, 300):
+		fade.set_alpha(alpha)
+		#self.dibujar()
+		pantalla.blit(fade, (0,0))
+		pg.display.update()
+		pg.time.wait(1)
+		#pg.time.delay(1)
+
+def menu(pantalla, clock, musica, img_titulo, img_fondo, instrucciones):
 		# pantalla de menu principal
-		carpeta_sonidos = Path("sfx")
-		carpeta_imagenes = Path("gfx")
-		pg.mixer.music.load(os.path.join(carpeta_sonidos, SFX["musica_menu"]))
+		pg.mixer.music.load(musica)
 		pg.mixer.music.play(loops=-1)
 		fuente = pg.font.Font('freesansbold.ttf', 20)
-		#pantalla.fill(CELESTE)
-		#dibujar_texto(pantalla, TITULO, 48, BLANCO, MITAD_ANCHO, ALTO / 4)
-		#dibujar_texto(pantalla, "Flechas para mover, espacio para saltar", 22, BLANCO, MITAD_ANCHO, MITAD_ALTO)
-		#dibujar_texto(pantalla, "Presione una tecla para continuar", 22, BLANCO, MITAD_ANCHO, ALTO * 3/4)
-
+		
 		# Imagen principal que sirve de titulo
-		titulo = pg.image.load(os.path.join(carpeta_imagenes, IMG_MENU["titulo"]))
+		titulo = pg.image.load(img_titulo)
 		img_titulo = titulo.get_rect()
 		titulo_top = 50
 		img_titulo.top = titulo_top
 		img_titulo.centerx = MITAD_ANCHO
 		titulo_top += img_titulo.height
 
-		fondo = pg.image.load(os.path.join(carpeta_imagenes, IMG_MENU["fondo"]))
+		fondo = pg.image.load(img_fondo)
 		img_fondo= fondo.get_rect()
 		img_fondo.top = 0
 		img_fondo.centerx = MITAD_ANCHO
 
 		# Pasar las instrucciones como una lista para controlar las lineas
-		instrucciones = ["Flechas para moverse (<- ->) -- Tecla [ESPACIO] para saltar -- Tecla [SHIFT] para acelerar (dash)",
-					   "Presiona: 'F' nivel facil -- 'M' nivel moderado -- 'D' nivel dificil",
-					   "P para pausar",
-					   "ESC para salir"]
+		instrucciones = instrucciones
 
 		pantalla.blit(fondo, img_fondo)
 		pantalla.blit(titulo, img_titulo)
@@ -143,12 +83,9 @@ def menu_principal(pantalla, clock):
 
 
 		pg.display.flip()
-		res = stop(clock)
+		res = stop(pantalla, clock)
+		#fade(pantalla)
 		return [res[0], res[1]]
-
-def game_over():
-		# pantalla de menu para volver a jugar
-		self.quit()
 
 
 def pantalla_pausa(pantalla):
@@ -165,14 +102,4 @@ def dibujar_texto(pantalla, texto, tamaño, color, x, y, align="topleft"):
 		texto_rect = texto_surface.get_rect()
 		texto_rect.midtop = (x, y)
 		pantalla.blit(texto_surface, texto_rect)
-
-def fade(): 
-	fade = pg.Surface((ANCHO, ALTO))
-	fade.fill((0,0,0))
-	for alpha in range(0, 300):
-		fade.set_alpha(alpha)
-		#self.dibujar()
-		self.pantalla.blit(fade, (0,0))
-		pg.display.update()
-		pg.time.delay(2)
 

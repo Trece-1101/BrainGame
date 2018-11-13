@@ -52,3 +52,20 @@ class Combotron(pg.sprite.Sprite):
 		self.y = y
 		self.rect.x = x * TAMAÑO_TILE
 		self.rect.y = y * TAMAÑO_TILE
+
+class Tiempotron(pg.sprite.Sprite):
+	"""docstring for Acelerador"""
+	def __init__(self, game, x, y):
+		self.groups = game.sprites, game.items
+		self._layer = ITEM_LAYER
+		super(Tiempotron, self).__init__(self.groups)
+		self.game = game
+		self.type = items["T"]
+		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
+		self.image = pg.transform.scale(self.image, (16, 16))
+		self.image.fill(NEGRO)
+		self.rect = self.image.get_rect()
+		self.x = x
+		self.y = y
+		self.rect.x = x * TAMAÑO_TILE
+		self.rect.y = y * TAMAÑO_TILE

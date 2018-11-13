@@ -1,6 +1,8 @@
 # modulo para almacenar parametros constantes re-utilizables
 
 import pygame as pg
+import os
+from pathlib import Path
 
 # Pantalla
 TITULO = "Mi juego"
@@ -11,7 +13,7 @@ MITAD_ALTO = ALTO / 2
 FPS = 60
 ACTUALIZACION_CUADROS = 150
 FUENTE = "arial"
-IMG_MENU = {"titulo": "star_title.png", "fondo": "Virus_Fondo.png"}
+
 
 # Constantes Personaje
 vec2 = pg.math.Vector2 # vector2 para movimiento y posicion
@@ -24,8 +26,6 @@ CORTE_SALTO = -500
 GRAVEDAD = 150
 BOOST_POW = -50
 PLAYER_VIDA_INICIAL = 50
-PLAYER_IMG = ""
-SPRITESHEET_BRAIN = "sprites.png"
 UMBRAL_CORRER = 50
 
 # Dificultades
@@ -62,24 +62,39 @@ OFFSETX_CAMARA = 200
 # Items
 items = {"A": "acelerar", 
 		"S": "saltar", 
-		"C": "combotron", 
+		"C": "combotron",
+		"T": "tiempotron", 
 		"B": "BotAraña",
 		"AV": "Antivirus" }
 
-PROB_ACELERADOR = 50
-BOOST_ACELERADOR = 40
-PROB_PAD_SALTO = 60
+PROB_ACELERADOR = 60
+PROB_PAD_SALTO = 50
+PROB_COMBOTRON = 70
+PROB_TIEMPOTRON = 30
 BOOST_PAD_SALTO = 1.2
-PROB_COMBOTRON = 50
+BOOST_ACELERADOR = 50
+BOOST_COMBOTRON = 15
+BOOST_TIEMPOTRON = 1000
 
 # Enemigos
-DANIO_BOT = 5
-DANIO_AV = 10
+DANIO_BOT = 2000
+DANIO_AV = 3000
 MOV_AV = [150, 175, 200, 225, 250]
 VEL_AV = [2, 3, 4, 5, 6]
 VEL_BOT = [10, 15, 20, 25, 30, 35]
 TIEMPO_ANIMACION_MUERTE = 500
 RADIO_DETECCION = [200, 250, 300, 350, 400]
+
+
+
+# imagenes
+CARPETA_IMAGENES = Path("gfx")
+
+IMG_MENU = {"titulo": "star_title.png", "fondo": "Virus_Fondo.png"}
+
+PLAYER_IMG = ""
+SPRITESHEET_BRAIN = "sprites.png"
+
 IMG_ENEMIGOS = {"av_idle": "avIdle.png",
 				"av_run1": "avrun.png",
 				"bot_idle": "botIdle.png",
@@ -95,15 +110,38 @@ IMG_ENEMIGOS = {"av_idle": "avIdle.png",
 SPRITESHEETS = {"bot": "Prueba_sprite.png"}
 SPRITESHEET_ARAÑA = "araña.png"
 
-
 # sonidos
+CARPETA_SONIDOS = Path("sfx") 
+
 SFX = {"musica_menu": "menu.ogg", 
 		"musica": ["musica1.wav", "musica2.wav", "musica3.wav", "musica4.wav"],
 		"musica_creditos": "creditos.wav",
 		"boost": "boost.wav",
-		"itembinario": "itembinario.wav",
+		"tiempotron": "tiempotron.wav",
+		"combotron": "combotron.wav",
 		"lastimado": "lastimado.wav",
 		"lastimados_npc": "lastimados_NPC.wav",
 		"salto": "salto.wav",
 		"salto_boost": "salto_boost.wav",
-		"tiempo_limite": "tiempolimite.wav"}
+		"tiempo_limite": "tiempolimite.wav",
+		"portal": "portal.wav"}
+
+# Menus
+
+INSTRUCCIONES_MENU_PRINCIPAL = ["Flechas para moverse (<- ->) -- Tecla [ESPACIO] para saltar -- Tecla [SHIFT] para acelerar (dash)",
+					   			"Presiona: 'F' nivel facil -- 'M' nivel moderado -- 'D' nivel dificil",
+					   			"P para pausar",
+					   			"C creditos",
+					   			"ESC para salir"]
+INSTRUCCIONES_GAME_OVER = ["Gracias por jugar",
+							"ESC para salir"]
+
+INSTRUCCIONES_CREDITOS = ["Creadores (orden alfabetico):",
+							"Bazzi Omar",
+							"Martin Matias",
+							"ESC para salir",]
+
+MUSICA_MENU_PRINCIPAL = os.path.join(CARPETA_SONIDOS, SFX["musica_menu"])
+MUSICA_GAME_OVER = os.path.join(CARPETA_SONIDOS, SFX["musica_creditos"])
+IMAGEN_MENU_PRINCIPAL = os.path.join(CARPETA_IMAGENES, IMG_MENU["titulo"])
+FONDO_MENU_PRINCIPAL = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo"])
