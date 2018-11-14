@@ -9,6 +9,7 @@ from scripts.tiles import *
 from scripts.camara import *
 from scripts.item import *
 from scripts.menus import *
+from scripts.controles import *
 
 # GUI
 def gui(pantalla, x, y, pct, color_lleno, color_medio, color_vacio, texto):
@@ -52,6 +53,8 @@ class Game():
 		self.tiempo_final = TIEMPO_NIVEL * iniciar[1]
 		self.control_tiempo = 0
 		self.c_niveles = 1
+		if verificar_controles():
+			self.j = pg.joystick.Joystick(0)
 		
 
 	def cargar_datos(self):
@@ -159,6 +162,7 @@ class Game():
 			if evento.type == pg.KEYUP:
 				if evento.key == pg.K_SPACE:
 					self.player.control_salto()
+			
 
 	def dibujar_grilla(self):
 		for x in range(0, ANCHO, TAMAÑO_TILE):

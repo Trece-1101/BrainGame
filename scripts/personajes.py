@@ -192,8 +192,6 @@ class PlayerOne(pg.sprite.Sprite):
 			elif self.sentido == "I" and self.stamina > 0:
 				self.acel.x = -(PLAYER_ACEL * PLAYER_DASH)
 				self.stamina -= 1
-			#print(self.stamina)
-
 
 		self.fisica_aceleracion()
 
