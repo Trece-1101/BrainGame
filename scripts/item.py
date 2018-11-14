@@ -10,9 +10,9 @@ class Acelerador(pg.sprite.Sprite):
 		super(Acelerador, self).__init__(self.groups)
 		self.game = game
 		self.type = items["A"]
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image = pg.transform.scale(self.image, (16, 16))
-		self.image.fill(AMARILLO)
+		self.image = self.game.spritesheet.get_imagen(198, 132, 64, 64)
+		self.image = pg.transform.scale(self.image, (32, 32))
+		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x
 		self.y = y
@@ -27,9 +27,9 @@ class PadSalto(pg.sprite.Sprite):
 		super(PadSalto, self).__init__(self.groups)
 		self.game = game
 		self.type = items["S"]
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image = pg.transform.scale(self.image, (16, 16))
-		self.image.fill(BLANCO)
+		self.image = self.game.spritesheet.get_imagen(198, 66, 64, 64)
+		self.image = pg.transform.scale(self.image, (32, 32))
+		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x
 		self.y = y
@@ -44,14 +44,15 @@ class Combotron(pg.sprite.Sprite):
 		super(Combotron, self).__init__(self.groups)
 		self.game = game
 		self.type = items["C"]
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image = pg.transform.scale(self.image, (16, 16))
-		self.image.fill(AZUL)
+		self.image = self.game.spritesheet.get_imagen(198, 198, 64, 64)
+		self.image = pg.transform.scale(self.image, (32, 32))
+		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x
 		self.y = y
 		self.rect.x = x * TAMAÑO_TILE
 		self.rect.y = y * TAMAÑO_TILE
+
 
 class Tiempotron(pg.sprite.Sprite):
 	"""docstring for Acelerador"""
@@ -61,9 +62,9 @@ class Tiempotron(pg.sprite.Sprite):
 		super(Tiempotron, self).__init__(self.groups)
 		self.game = game
 		self.type = items["T"]
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image = pg.transform.scale(self.image, (16, 16))
-		self.image.fill(NEGRO)
+		self.image = self.game.spritesheet.get_imagen(198, 0, 64 ,64)
+		self.image = pg.transform.scale(self.image, (32, 32))
+		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x
 		self.y = y

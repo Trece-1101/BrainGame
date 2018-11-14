@@ -1,0 +1,56 @@
+<TextureAtlas imagePath="brain_SpriteSheet.png">
+	<SubTexture name="Antivirus 1.png" x="198" y="330" width="64" height="64"/>
+	<SubTexture name="Antivirus 2.png" x="462" y="198" width="64" height="64"/>
+	<SubTexture name="Antivirus 3.png" x="462" y="132" width="64" height="64"/>
+	<SubTexture name="Antivirus 4.png" x="462" y="66" width="64" height="64"/>
+	<SubTexture name="Antivirus 5.png" x="462" y="0" width="64" height="64"/>
+	<SubTexture name="Antivirus 6.png" x="396" y="396" width="64" height="64"/>
+	<SubTexture name="Antivirusmuerto.png" x="396" y="330" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-02 (Personalizado).png" x="330" y="396" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-03 (Personalizado).png" x="330" y="330" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-04 (Personalizado).png" x="330" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Invert-02 (Personalizado).png" x="396" y="198" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Invert-03 (Personalizado).png" x="396" y="132" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Invert-04 (Personalizado).png" x="396" y="66" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Invert_Mesa de trabajo 1 (Personalizado).png" x="396" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Mesa de trabajo 1 (Personalizado).png" x="396" y="0" width="64" height="64"/>
+	<SubTexture name="Araña_Idle-02 (Personalizado).png" x="264" y="330" width="64" height="64"/>
+	<SubTexture name="Araña_Idle-03 (Personalizado).png" x="264" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Idle-04 (Personalizado).png" x="264" y="198" width="64" height="64"/>
+	<SubTexture name="Araña_Idle_Mesa de trabajo 1 (Personalizado).png" x="264" y="396" width="64" height="64"/>
+	<SubTexture name="Araña_Muerte_Victoria-02 (Personalizado).png" x="264" y="66" width="64" height="64"/>
+	<SubTexture name="Araña_Muerte_Victoria_Mesa de trabajo 1 (Personalizado).png" x="264" y="132" width="64" height="64"/>
+	<SubTexture name="Araña_Salto-02 (Personalizado).png" x="198" y="396" width="64" height="64"/>
+	<SubTexture name="Araña_Salto-03 (Personalizado).png" x="462" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Salto-04 (Personalizado).png" x="198" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Salto_Mesa de trabajo 1 (Personalizado).png" x="264" y="0" width="64" height="64"/>
+	<SubTexture name="Araña_dash-02 (Personalizado).png" x="330" y="132" width="64" height="64"/>
+	<SubTexture name="Araña_dash-03 (Personalizado).png" x="330" y="66" width="64" height="64"/>
+	<SubTexture name="Araña_dash-04 (Personalizado).png" x="330" y="0" width="64" height="64"/>
+	<SubTexture name="Araña_dash_Mesa de trabajo 1 (Personalizado).png" x="330" y="198" width="64" height="64"/>
+	<SubTexture name="Items 1.png" x="198" y="198" width="64" height="64"/>
+	<SubTexture name="Items 2.png" x="198" y="132" width="64" height="64"/>
+	<SubTexture name="Items 3.png" x="198" y="66" width="64" height="64"/>
+	<SubTexture name="Items 4.png" x="198" y="0" width="64" height="64"/>
+	<SubTexture name="Items 5.png" x="132" y="396" width="64" height="64"/>
+	<SubTexture name="Items 6.png" x="132" y="330" width="64" height="64"/>
+	<SubTexture name="TileNormal_320x320_centro.png" x="0" y="330" width="64" height="64"/>
+	<SubTexture name="TileNormal_320x320_extremo1.png" x="0" y="264" width="64" height="64"/>
+	<SubTexture name="TileNormal_320x320_extremo2.png" x="0" y="198" width="64" height="64"/>
+	<SubTexture name="TileTrampa 1.png" x="0" y="132" width="64" height="64"/>
+	<SubTexture name="TileTrampa 2.png" x="0" y="66" width="64" height="64"/>
+	<SubTexture name="TileTrampa 3.png" x="0" y="0" width="64" height="64"/>
+	<SubTexture name="player 1.png" x="132" y="264" width="64" height="64"/>
+	<SubTexture name="player 2.png" x="132" y="198" width="64" height="64"/>
+	<SubTexture name="player 3.png" x="132" y="132" width="64" height="64"/>
+	<SubTexture name="player 4.png" x="132" y="66" width="64" height="64"/>
+	<SubTexture name="player 5.png" x="132" y="0" width="64" height="64"/>
+	<SubTexture name="playercamina 1.png" x="66" y="396" width="64" height="64"/>
+	<SubTexture name="playercamina 2.png" x="66" y="330" width="64" height="64"/>
+	<SubTexture name="playercamina 3.png" x="66" y="264" width="64" height="64"/>
+	<SubTexture name="playercamina 4.png" x="66" y="198" width="64" height="64"/>
+	<SubTexture name="playercorre 1.png" x="66" y="132" width="64" height="64"/>
+	<SubTexture name="playercorre 2.png" x="66" y="66" width="64" height="64"/>
+	<SubTexture name="playermuerte.png" x="66" y="0" width="64" height="64"/>
+	<SubTexture name="playersalta 1.png" x="0" y="396" width="64" height="64"/>
+</TextureAtlas>

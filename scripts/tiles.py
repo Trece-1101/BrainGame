@@ -30,25 +30,39 @@ class Portal(pg.sprite.Sprite):
 	def __init__(self, game, x, y):
 		self.groups = game.sprites, game.portales
 		super(Portal, self).__init__(self.groups)
-		#self.image = self.game.pared_img
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image.fill(NEGRO)
+		self.game = game
+		self.image = self.game.spritesheet.get_imagen(132, 330, 64, 64)	
+		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x
 		self.y = y
 		self.rect.x = x * TAMAÑO_TILE
 		self.rect.y = y * TAMAÑO_TILE
-		
+		self.pos = vec2(x, y) * TAMAÑO_TILE
 
-class Plataforma(pg.sprite.Sprite):
+	def abierto(self):
+		self.image = self.game.spritesheet.get_imagen(132, 396, 64, 64)	
+		self.image.set_colorkey(NEGRO)
+
+	def cerrado(self):
+		self.image = self.game.spritesheet.get_imagen(132, 330, 64, 64)	
+		self.image.set_colorkey(NEGRO)
+
+	def update(self):
+		dist_obj = self.pos - self.game.player.pos
+		if (abs(dist_obj[0]) < RADIO_DETECCION_PORTAL) and (abs(dist_obj[1]) < 70):
+			self.abierto()
+		else:
+			self.cerrado()
+
+
+class PlataformaCentro(pg.sprite.Sprite):
 	"""docstring for Plataforma"""
 	def __init__(self, game, x, y):
 		self.groups = game.sprites, game.plataformas
-		super(Plataforma, self).__init__(self.groups)
+		super(PlataformaCentro, self).__init__(self.groups)
 		self.game = game
-		#self.image = self.game.pared_img
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image.fill(VERDE)
+		self.image = self.game.spritesheet.get_imagen(0, 330, 64, 64)
 		self.rect = self.image.get_rect()
 		self.x = x
 		self.y = y
@@ -56,14 +70,40 @@ class Plataforma(pg.sprite.Sprite):
 		self.rect.y = y * TAMAÑO_TILE
 		self.type = "normal"
 
-class PlataformaTrampa(pg.sprite.Sprite):
+class PlataformaExtremoI(pg.sprite.Sprite):
+	"""docstring for Plataforma"""
 	def __init__(self, game, x, y):
 		self.groups = game.sprites, game.plataformas
-		super(PlataformaTrampa, self).__init__(self.groups)
+		super(PlataformaExtremoI, self).__init__(self.groups)
 		self.game = game
-		#self.image = self.game.pared_img
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image.fill(AMARILLO)
+		self.image = self.game.spritesheet.get_imagen(0, 264, 64, 64)
+		self.rect = self.image.get_rect()
+		self.x = x
+		self.y = y
+		self.rect.x = x * TAMAÑO_TILE
+		self.rect.y = y * TAMAÑO_TILE
+		self.type = "normal"
+
+class PlataformaExtremoD(pg.sprite.Sprite):
+	"""docstring for Plataforma"""
+	def __init__(self, game, x, y):
+		self.groups = game.sprites, game.plataformas
+		super(PlataformaExtremoD, self).__init__(self.groups)
+		self.game = game
+		self.image = self.game.spritesheet.get_imagen(0, 198, 64, 64)
+		self.rect = self.image.get_rect()
+		self.x = x
+		self.y = y
+		self.rect.x = x * TAMAÑO_TILE
+		self.rect.y = y * TAMAÑO_TILE
+		self.type = "normal"
+
+class PlataformaTrampaCentro(pg.sprite.Sprite):
+	def __init__(self, game, x, y):
+		self.groups = game.sprites, game.plataformas
+		super(PlataformaTrampaCentro, self).__init__(self.groups)
+		self.game = game
+		self.image = self.game.spritesheet.get_imagen(0, 66, 64, 64)
 		self.rect = self.image.get_rect()
 		self.x = x
 		self.y = y
@@ -78,5 +118,33 @@ class PlataformaTrampa(pg.sprite.Sprite):
 			#self.kill()
 			self.rect.y += 5
 			if self.rect.y - pos_original > 100:
-				print(str(self.rect.y - pos_original))
+				#print(str(self.rect.y - pos_original))
 				self.kill()
+
+class PlataformaTrampaI(PlataformaTrampaCentro):
+	def __init__(self, game, x, y):
+		self.groups = game.sprites, game.plataformas
+		super(PlataformaTrampaI, self).__init__(game, x, y)
+		self.game = game
+		self.image = self.game.spritesheet.get_imagen(0, 132, 64, 64)
+		self.rect = self.image.get_rect()
+		self.x = x
+		self.y = y
+		self.rect.x = x * TAMAÑO_TILE
+		self.rect.y = y * TAMAÑO_TILE
+		self.type = "trampa"
+		self.pisada = False
+
+class PlataformaTrampaD(PlataformaTrampaCentro):
+	def __init__(self, game, x, y):
+		self.groups = game.sprites, game.plataformas
+		super(PlataformaTrampaD, self).__init__(game, x, y)
+		self.game = game
+		self.image = self.game.spritesheet.get_imagen(0, 0, 64, 64)
+		self.rect = self.image.get_rect()
+		self.x = x
+		self.y = y
+		self.rect.x = x * TAMAÑO_TILE
+		self.rect.y = y * TAMAÑO_TILE
+		self.type = "trampa"
+		self.pisada = False 

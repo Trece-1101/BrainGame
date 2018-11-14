@@ -10,6 +10,7 @@ from scripts.camara import *
 from scripts.item import *
 from scripts.menus import *
 from scripts.controles import *
+from scripts.fondos import *
 
 # GUI
 def gui(pantalla, x, y, pct, color_lleno, color_medio, color_vacio, texto):
@@ -43,66 +44,57 @@ class Game():
 		pg.display.set_caption(TITULO) # titulo que aparece en la ventana
 		self.FPSclock = pg.time.Clock()
 		#self.run = True # bool para determinar si el juego (la ventana) va a seguir abierta
-		iniciar = menu(self.pantalla, self.FPSclock, MUSICA_MENU_PRINCIPAL, IMAGEN_MENU_PRINCIPAL, FONDO_MENU_PRINCIPAL, INSTRUCCIONES_MENU_PRINCIPAL)
+		iniciar = menu(self.pantalla, self.FPSclock)
 		self.run = iniciar[0]	
 		#self.run = menu_principal(self.pantalla, self.FPSclock)
 		self.jugando = True # bool para determinar el game_over o no	
-		self.fuente = pg.font.match_font(FUENTE)	
+		self.fuente = pg.font.match_font(FUENTE)
+		#self.fondos = []	
 		self.cargar_datos()
 		self.pausado = False
+		self.tiempo_inicio = pg.time.get_ticks()
 		self.tiempo_final = TIEMPO_NIVEL * iniciar[1]
-		self.control_tiempo = 0
+		self.control_tiempo = 0		
 		self.c_niveles = 1
 		if verificar_controles():
 			self.j = pg.joystick.Joystick(0)
 		
 
 	def cargar_datos(self):
-		# metodo para cargar datos desde archivos				
-		try:
-			# imagenes			
+		# metodo para cargar datos desde archivos
+		# imagenes			
 
-			# player
-			self.img_virus = pg.image.load(os.path.join(CARPETA_IMAGENES, IMG_ENEMIGOS["prueba2"])).convert_alpha()
-			self.img_virus = pg.transform.scale(self.img_virus, (TAMAÑO_TILE, TAMAÑO_TILE))
-			self.spritesheet_brain = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET_BRAIN))
+		# spritesheet_completo			
+		self.spritesheet = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET))
 
-			# enemigos
-			self.img_av_idle = pg.image.load(os.path.join(CARPETA_IMAGENES, IMG_ENEMIGOS["av_idle"])).convert_alpha()
-			self.img_av_idle = pg.transform.scale(self.img_av_idle, (TAMAÑO_TILE, TAMAÑO_TILE))
-			self.img_av_run1 = pg.image.load(os.path.join(CARPETA_IMAGENES, IMG_ENEMIGOS["av_run1"])).convert_alpha()
-			self.img_av_run1 = pg.transform.scale(self.img_av_run1, (TAMAÑO_TILE, TAMAÑO_TILE))
-			self.img_av_muerto = pg.transform.rotate(self.img_av_idle, 180)
-			self.spritesheet_bot = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEETS["bot"]))		
-			self.spritesheet_araña = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET_ARAÑA))
+		# fondos
+		'''self.fondos = []
+		for f in FONDOS:
+			self.fondos.append(os.path.join(CARPETA_IMAGENES, FONDOS[f]))
 
-			# items
+		self.fondo = random.choice(self.fondos)	'''
 
+		# sonidos
+		self.carpeta_sonidos = Path("sfx")
 
-			# sonidos
-			self.carpeta_sonidos = Path("sfx")
-
-			# acciones
-			self.sonido_salto = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto"]))		
-			self.sonido_lastimado = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimado"]))
-			self.sonido_muerteNPC = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimados_npc"]))
-			self.sonido_portal = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["portal"]))
-			# tiempo
-			self.sonido_tiempo_limite = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempo_limite"]))		
-			# items
-			self.sonido_salto_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto_boost"]))
-			self.sonido_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["boost"]))
-			self.sonido_combotron = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["combotron"]))
-			self.sonido_tiempotron = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempotron"]))
-			#pg.mixer.music.fadeout(500)
-		except Exception as e:
-			print(e)
+		# acciones
+		self.sonido_salto = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto"]))		
+		self.sonido_lastimado = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimado"]))
+		self.sonido_muerteNPC = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimados_npc"]))
+		self.sonido_portal = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["portal"]))
+		# tiempo
+		self.sonido_tiempo_limite = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempo_limite"]))		
+		# items
+		self.sonido_salto_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto_boost"]))
+		self.sonido_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["boost"]))
+		self.sonido_combotron = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["combotron"]))
+		self.sonido_tiempotron = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempotron"]))
 	
 
 		# crear una secuencia de 10 niveles aleatorios
 		# 3 faciles
 		# 3 medios
-		# 3 dificiles
+		# 3 dificilesf
 		# 1 final
 
 		self.sec_niveles = []
@@ -135,8 +127,8 @@ class Game():
 	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
 		#self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
-		self.mapa = Mapa(carpeta_mapas / "nivel2.txt")
-		print(nivel)
+		self.mapa = Mapa(carpeta_mapas / "nivel4.txt")
+		#print(nivel)
 		self.mapear()
 
 	def musica_random(self):
@@ -175,8 +167,12 @@ class Game():
 	def dibujar(self):
 		# metodo que maneja el dibujo en pantalla de todas las cosas
 		pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
+
+
+		self.pantalla.blit(self.img_fondo, self.img_fondo_rect)
 		
-		self.pantalla.fill(CELESTE) # lleno la pantalla de fondo celeste
+		#self.pantalla.fill(CELESTE) # lleno la pantalla de fondo celeste
+		#fondo = pygame.image.load(choice(self.fondos)).convert()
 
 		pct_scan = self.control_tiempo / self.tiempo_final
 		if pct_scan > 0.9:
@@ -189,11 +185,13 @@ class Game():
 		#descomentar para ver la grilla
 		#self.dibujar_grilla()
 
-			
+		
+
 		for sprite in self.sprites:
 			# por cada sprite que exista en el grupo principal de sprites
 			self.pantalla.blit(sprite.image, self.camara.aplicar_camara(sprite))
 	
+
 
 		if self.pausado:		
 			self.pantalla.blit(pantalla_pausa(self.pantalla), (0,0))
@@ -202,19 +200,33 @@ class Game():
 		pg.display.flip()
 
 
-	def mapear(self):
+	def mapear(self, colPlayer = 0, filaPlayer = 0):
 		# metodo para tomar un .txt y convertirlo en mapa
 		# cargo y creo el mapa
 		for fila, tiles in enumerate(self.mapa.data_mapa):
 			for col, tile in enumerate(tiles):
 				if tile == "1":
-					Plataforma(self, col, fila)
+					PlataformaCentro(self, col, fila)
+				elif tile == "0":
+					PlataformaExtremoI(self, col, fila)
 				elif tile == "2":
-					PlataformaTrampa(self, col, fila)
+					PlataformaExtremoD(self, col, fila)
+				elif tile == "5":
+					PlataformaTrampaCentro(self, col, fila)
+				elif tile == "4":
+					PlataformaTrampaI(self, col, fila)
+				elif tile == "6":
+					PlataformaTrampaD(self, col, fila)
 				elif tile == "X":
 					Portal(self, col, fila)
 				elif tile == "P":
-					self.player = PlayerOne(self, col, fila) # inicializo al player				
+					if colPlayer == 0 and filaPlayer == 0:
+						self.player = PlayerOne(self, col, fila) # inicializo al player
+						print(self.player.pos.x , " -- ", self.player.pos.y)
+						print(col, fila)
+					else:
+						self.player = PlayerOne(self, colPlayer, filaPlayer)
+						self.player.stamina = self.respawn_stamina		
 				elif tile == "B":
 					Botaraña(self, col, fila)
 				elif tile == "V":
@@ -233,10 +245,7 @@ class Game():
 						Tiempotron(self, col, fila)
 
 	
-
-	def nuevo_juego(self):
-		# cada vez que se inicia o reinicia el juego, no la ventana
-		# creacion de grupos para manejar sprites mas eficientemente
+	def reiniciar_sprites(self):
 		self.sprites = pg.sprite.LayeredUpdates() # grupo para todos los sprites, con capas
 		self.plataformas = pg.sprite.Group()
 		self.items = pg.sprite.Group()
@@ -245,17 +254,34 @@ class Game():
 		self.portales = pg.sprite.Group()
 		self.fondos = pg.sprite.Group()
 
+
+	def nuevo_juego(self):
+		# cada vez que se inicia o reinicia el juego, no la ventana
+		# creacion de grupos para manejar sprites mas eficientemente
+		self.reiniciar_sprites()
+
 		# musica
-		self.musica_random()			
-		
+		self.musica_random()
+
+		# fondo
+		self.fondo = os.path.join(CARPETA_IMAGENES, random.choice(FONDO))
+		self.img_fondo = pg.image.load(self.fondo)
+		self.img_fondo_rect = self.img_fondo.get_rect()	
+			
 		# instanciar el mapa
 		self.cargar_nivel(self.sec_niveles[0])
+
 		
 		# instanciamos la camara con los valores del mapa que salen en la carga de datos
 		self.camara = Camara(self,self.mapa.ancho, self.mapa.alto)
 
 		# iniciamos el juego
 		self.jugar()
+
+	def respawn(self):
+		self.reiniciar_sprites()
+		self.mapear(self.player.col, self.player.fila)
+
 
 	def update(self):
 		# metodo principal que maneja colisiones, condiciones de victoria/derrota, spawns y re-spawns
@@ -264,16 +290,18 @@ class Game():
 		self.camara.update(self.player)
 
 
-		self.control_tiempo = pg.time.get_ticks()
+		self.control_tiempo = pg.time.get_ticks() - self.tiempo_inicio
 		#print(self.control_tiempo)
+		#print(self.tiempo_final)
 		if self.tiempo_final - self.control_tiempo <= 0:
 			#print("tiempo: {0} -- tiempofinal: {1} -- timeout".format(self.control_tiempo, self.tiempo_final))
 			self.jugando = False
 
 
 		if self.player.pos.y > 2000:
-			print("caida")
-			self.nuevo_juego()
+			#print("caida")
+			self.respawn_stamina = self.player.stamina
+			self.respawn()
 
 
 
@@ -339,14 +367,17 @@ class Game():
 				self.sonido_tiempotron.play()
 				self.tiempo_final += BOOST_TIEMPOTRON
 
+
+
 	def game_over(self):
-		res = menu(self.pantalla, self.FPSclock, MUSICA_GAME_OVER, IMAGEN_MENU_PRINCIPAL, FONDO_MENU_PRINCIPAL, INSTRUCCIONES_GAME_OVER)
-		return res[0]
+		res = menu_game_over(self.pantalla, self.FPSclock)
+		return res		
+
+
 
 	def jugar(self):
 		# loop principal del juego, este metodo esta integrado por los metodos principales
 		pg.mixer.music.play(loops = -1) # musica principal del juego en loop infinito
-		#self.jugando = True
 		while self.jugando:			
 			self.dt = self.FPSclock.tick(FPS) / 1000
 			self.eventos()

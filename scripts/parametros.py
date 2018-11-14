@@ -11,7 +11,8 @@ ALTO = 896
 MITAD_ANCHO = ANCHO / 2
 MITAD_ALTO = ALTO / 2
 FPS = 60
-ACTUALIZACION_CUADROS = 150
+ACTUALIZACION_CUADROS = 250
+ACTUALIZACION_CUADROS_ENEMIGOS = 400
 FUENTE = "arial"
 
 
@@ -26,7 +27,7 @@ CORTE_SALTO = -500
 GRAVEDAD = 150
 BOOST_POW = -50
 PLAYER_VIDA_INICIAL = 50
-UMBRAL_CORRER = 50
+UMBRAL_CORRER = 100
 
 # Dificultades
 TIEMPO_NIVEL = 30000
@@ -54,7 +55,7 @@ AMARILLO = (255, 255, 0)
 CELESTE = (0, 155, 155)
 
 # Tiles
-TAMAÑO_TILE = 32
+TAMAÑO_TILE = 40
 ANCHO_GRILLA = ANCHO / TAMAÑO_TILE # 1024 = 32 ancho;  1440 = 45 ancho
 ALTO_GRILLA = ALTO / TAMAÑO_TILE # 640 = 20 alto; 896 = 28 alto
 OFFSETX_CAMARA = 200
@@ -75,13 +76,14 @@ BOOST_PAD_SALTO = 1.2
 BOOST_ACELERADOR = 50
 BOOST_COMBOTRON = 15
 BOOST_TIEMPOTRON = 1000
+RADIO_DETECCION_PORTAL = 450
 
 # Enemigos
 DANIO_BOT = 2000
 DANIO_AV = 3000
 MOV_AV = [150, 175, 200, 225, 250]
 VEL_AV = [2, 3, 4, 5, 6]
-VEL_BOT = [10, 15, 20, 25, 30, 35]
+VEL_BOT = [20, 25, 30, 35, 50]
 TIEMPO_ANIMACION_MUERTE = 500
 RADIO_DETECCION = [200, 250, 300, 350, 400]
 
@@ -89,11 +91,34 @@ RADIO_DETECCION = [200, 250, 300, 350, 400]
 
 # imagenes
 CARPETA_IMAGENES = Path("gfx")
+SPRITESHEET = "spritesheet.png"
+
+BRAIN = {"idle1": (132, 264, 64, 64),
+		"idle2": (132, 198, 64, 64),
+		"idle3": (132, 132, 64, 64),
+		"idle4": (132, 66, 64, 64),
+		"idle5": (132, 0, 64, 64),
+		"caminar1": (66, 396, 64, 64),
+		"caminar2": (66, 330, 64, 64),
+		"caminar3": (66, 264, 64, 64),
+		"caminar4": (66, 198, 64, 64),
+		"correr1": (66, 132, 64, 64),
+		"correr2": (66, 66, 64, 64),
+		"saltar":(0 , 396, 64, 64),
+		"morir": (66 , 0, 64, 64)}
+
+FONDOS = {"fondo1": "fondo1.png",
+		"fondo2": "fondo2.png",
+		"fondo3": "fondo3.png",
+		"fondo4": "fondo4.png",
+		"fondo5": "fondo5.png",
+		"fondo6": "fondo6.png"}
+
+FONDO = ["fondo1.png", "fondo2.png", "fondo3.png", "fondo4.png", "fondo5.png", "fondo6.png"]
 
 IMG_MENU = {"titulo": "star_title.png", "fondo": "Virus_Fondo.png"}
 
-PLAYER_IMG = ""
-SPRITESHEET_BRAIN = "sprites.png"
+
 
 IMG_ENEMIGOS = {"av_idle": "avIdle.png",
 				"av_run1": "avrun.png",
@@ -129,7 +154,7 @@ SFX = {"musica_menu": "menu.ogg",
 # Menus
 
 INSTRUCCIONES_MENU_PRINCIPAL = ["Flechas para moverse (<- ->) -- Tecla [ESPACIO] para saltar -- Tecla [SHIFT] para acelerar (dash)",
-					   			"Presiona: 'F' nivel facil -- 'M' nivel moderado -- 'D' nivel dificil",
+					   			"J para jugar",
 					   			"P para pausar",
 					   			"C creditos",
 					   			"ESC para salir"]
@@ -139,7 +164,13 @@ INSTRUCCIONES_GAME_OVER = ["Gracias por jugar",
 INSTRUCCIONES_CREDITOS = ["Creadores (orden alfabetico):",
 							"Bazzi Omar",
 							"Martin Matias",
-							"ESC para salir",]
+							"M para regresar al menu",
+							"ESC para salir"]
+
+INSTRUCCIONES_DIFICULTAD = ["F - Nivel Facil - Tiempo de sobra",
+							"M - Nivel Moderado - Para disfrutar tu tiempo",
+							"D - Nivel Dificil - Un desafio total"]
+
 
 MUSICA_MENU_PRINCIPAL = os.path.join(CARPETA_SONIDOS, SFX["musica_menu"])
 MUSICA_GAME_OVER = os.path.join(CARPETA_SONIDOS, SFX["musica_creditos"])
