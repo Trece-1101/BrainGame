@@ -22,7 +22,7 @@ PLAYER_ACEL = 100 # 120 px por segundo
 PLAYER_FRICCION = -0.1
 PLAYER_DASH = 2
 PLAYER_STAMINA = 100
-PLAYER_SALTO = -2300
+PLAYER_SALTO = -2400
 CORTE_SALTO = -300
 GRAVEDAD = 150
 BOOST_POW = -50
@@ -36,6 +36,16 @@ DIFICULTAD_HARD = 0.8
 DIFICULTAD_NORMAL = 1
 DIFICULTAD_FACIL = 1.2
 DIFICULTAD_BATY = 1.5
+
+# Niveles
+INI_FACIL = 1
+FIN_FACIL = 5
+INI_MEDIO = 6
+FIN_MEDIO = 10
+INI_DIFICIL = 11
+FIN_DIFICIL = 15
+INI_FINAL = 16
+FIN_FINAL = 17
 
 # Capas
 PLAYER_LAYER = 2
@@ -77,7 +87,7 @@ PROB_TIEMPOTRON = 30
 BOOST_PAD_SALTO = 1.2
 BOOST_ACELERADOR = 50
 BOOST_COMBOTRON = 15
-BOOST_TIEMPOTRON = 1000
+BOOST_TIEMPOTRON = 2000
 RADIO_DETECCION_PORTAL = 450
 
 # Enemigos
@@ -163,8 +173,7 @@ INSTRUCCIONES_CREDITOS = ["Creadores (orden alfabetico):",
 							"Bazzi, Omar",
 							"Martin, Matias",
 							"-----------------------------",
-							"[M] >> Regresar al menu",
-							"[ESC] >> Salir"]
+							"[M] >> Regresar al menu"]
 
 INSTRUCCIONES_DIFICULTAD = ["Selecciona tu dificultad",
 							"------------------------",

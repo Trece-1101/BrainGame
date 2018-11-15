@@ -48,7 +48,7 @@ class Game():
 		self.pantalla = pg.display.set_mode((ANCHO, ALTO)) # tamaño de la ventana del juego
 		pg.display.set_caption(TITULO) # titulo que aparece en la ventana
 		self.FPSclock = pg.time.Clock()
-		iniciar = menu(self.pantalla, self.FPSclock)
+		iniciar = menu_principal(self.pantalla, self.FPSclock)
 		self.run = iniciar[0] # bool para determinar si el juego (la ventana) va a seguir abierta
 		self.jugando = True # bool para determinar el game_over o no	
 		self.fuente = pg.font.match_font(FUENTE)
@@ -89,40 +89,40 @@ class Game():
 		# crear una secuencia de 10 niveles aleatorios
 		# 3 faciles
 		# 3 medios
-		# 3 dificilesf
+		# 3 dificiles
 		# 1 final
 
 		self.sec_niveles = []
 		x = 0
 		while x < 3:
-			nivel = random.randint(1, 5)
+			nivel = random.randint(INI_FACIL, FIN_FACIL + 1)
 			if nivel not in self.sec_niveles:
 				self.sec_niveles.append(nivel)	
 				x += 1
 		x = 0		
 
 		while x < 3:
-			nivel = random.randint(6, 10)
+			nivel = random.randint(INI_MEDIO, FIN_MEDIO + 1)
 			if nivel not in self.sec_niveles:
 				self.sec_niveles.append(nivel)	
 				x += 1
 		x = 0	
 
 		while x < 3:
-			nivel = random.randint(11, 15)
+			nivel = random.randint(INI_DIFICIL, FIN_DIFICIL + 1)
 			if nivel not in self.sec_niveles:
 				self.sec_niveles.append(nivel)	
 				x += 1
 
-		nivel = random.randint(16, 17)
+		nivel = random.randint(INI_FINAL, FIN_FINAL + 1)
 		self.sec_niveles.append(nivel)
 		#print(self.sec_niveles)
 				
 
 	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
-		#self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
-		self.mapa = Mapa(carpeta_mapas / "nivel16.txt")
+		self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
+		#self.mapa = Mapa(carpeta_mapas / "nivel16.txt")
 		self.mapear()
 
 	def musica_random(self):
@@ -134,7 +134,7 @@ class Game():
 
 
 	def eventos(self):
-		# metodo que maneja inputs de teclado, todo lo relacionado a ingreso de usuario
+		# metodo que maneja inputs de teclado menos los keypress, todo lo relacionado al KUP y KDOW queda aca
 		for evento in pg.event.get():
 			if evento.type == pg.QUIT:
 				self.quit()
@@ -155,10 +155,10 @@ class Game():
 
 	def dibujar_grilla(self):
 		for x in range(0, ANCHO, TAMAÑO_TILE):
-			pg.draw.line(self.pantalla, NEGRO, (x, 0), (x, ALTO))
+			pg.draw.line(self.pantalla, BLANCO, (x, 0), (x, ALTO))
 
 		for y in range(0, ALTO, TAMAÑO_TILE):
-			pg.draw.line(self.pantalla, NEGRO, (0, y), (ANCHO, y))
+			pg.draw.line(self.pantalla, BLANCO, (0, y), (ANCHO, y))
 
 
 	def dibujar(self):
