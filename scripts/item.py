@@ -11,7 +11,7 @@ class Acelerador(pg.sprite.Sprite):
 		self.game = game
 		self.type = items["A"]
 		self.image = self.game.spritesheet.get_imagen(198, 132, 64, 64)
-		self.image = pg.transform.scale(self.image, (32, 32))
+		self.image = pg.transform.scale(self.image, (TAMAÑO_TILE_ITEM, TAMAÑO_TILE_ITEM))
 		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x
@@ -28,7 +28,7 @@ class PadSalto(pg.sprite.Sprite):
 		self.game = game
 		self.type = items["S"]
 		self.image = self.game.spritesheet.get_imagen(198, 66, 64, 64)
-		self.image = pg.transform.scale(self.image, (32, 32))
+		self.image = pg.transform.scale(self.image, (TAMAÑO_TILE_ITEM, TAMAÑO_TILE_ITEM))
 		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x
@@ -45,7 +45,7 @@ class Combotron(pg.sprite.Sprite):
 		self.game = game
 		self.type = items["C"]
 		self.image = self.game.spritesheet.get_imagen(198, 198, 64, 64)
-		self.image = pg.transform.scale(self.image, (32, 32))
+		self.image = pg.transform.scale(self.image, (TAMAÑO_TILE_ITEM, TAMAÑO_TILE_ITEM))
 		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x
@@ -63,7 +63,7 @@ class Tiempotron(pg.sprite.Sprite):
 		self.game = game
 		self.type = items["T"]
 		self.image = self.game.spritesheet.get_imagen(198, 0, 64 ,64)
-		self.image = pg.transform.scale(self.image, (32, 32))
+		self.image = pg.transform.scale(self.image, (TAMAÑO_TILE_ITEM, TAMAÑO_TILE_ITEM))
 		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
 		self.x = x

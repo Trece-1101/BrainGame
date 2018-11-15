@@ -2,6 +2,7 @@
 import pygame as pg
 import os
 import random
+import sys
 from pathlib import Path
 from scripts.parametros import *
 from scripts.personajes import *
@@ -11,9 +12,11 @@ from scripts.item import *
 from scripts.menus import *
 from scripts.controles import *
 from scripts.fondos import *
+from scripts.gui import *
 
 # GUI
 def gui(pantalla, x, y, pct, color_lleno, color_medio, color_vacio, texto):
+	# funcion de GUI
 	if pct < 0:
 		pct = 0
 	elif pct > 100:
@@ -31,7 +34,7 @@ def gui(pantalla, x, y, pct, color_lleno, color_medio, color_vacio, texto):
 		color = color_vacio
 	pg.draw.rect(pantalla, color, relleno_rect)
 	pg.draw.rect(pantalla, BLANCO, borde, 2)
-	dibujar_texto(pantalla, texto, 18, NEGRO, x + 55, y + 45)
+	dibujar_texto(pantalla, texto, 20, BLANCO, x + 55, y + 45)
 
 
 class Game():
@@ -44,7 +47,7 @@ class Game():
 		pg.display.set_caption(TITULO) # titulo que aparece en la ventana
 		self.FPSclock = pg.time.Clock()
 		#self.run = True # bool para determinar si el juego (la ventana) va a seguir abierta
-		iniciar = menu(self.pantalla, self.FPSclock)
+		iniciar = plantilla_menu(self.pantalla, self.FPSclock, "menu_principal")
 		self.run = iniciar[0]	
 		#self.run = menu_principal(self.pantalla, self.FPSclock)
 		self.jugando = True # bool para determinar el game_over o no	
@@ -68,12 +71,6 @@ class Game():
 		self.spritesheet = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET))
 		self.spritesheet_araña = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET_ARAÑA))
 
-		# fondos
-		'''self.fondos = []
-		for f in FONDOS:
-			self.fondos.append(os.path.join(CARPETA_IMAGENES, FONDOS[f]))
-
-		self.fondo = random.choice(self.fondos)	'''
 
 		# sonidos
 		self.carpeta_sonidos = Path("sfx")
@@ -128,13 +125,15 @@ class Game():
 	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
 		#self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
-		self.mapa = Mapa(carpeta_mapas / "nivel6.txt")
-		#print(nivel)
+		self.mapa = Mapa(carpeta_mapas / "nivel1.txt")
 		self.mapear()
 
 	def musica_random(self):
 		pg.mixer.music.load(os.path.join(self.carpeta_sonidos, random.choice(SFX["musica"])))
 		pg.mixer.music.play(loops=-1)
+
+	def quit(self):
+		sys.exit()
 
 
 	def eventos(self):
@@ -172,14 +171,13 @@ class Game():
 
 		self.pantalla.blit(self.img_fondo, self.img_fondo_rect)
 		
-		#self.pantalla.fill(CELESTE) # lleno la pantalla de fondo celeste
-		#fondo = pygame.image.load(choice(self.fondos)).convert()
 
 		pct_scan = self.control_tiempo / self.tiempo_final
 		if pct_scan > 0.9:
 			self.sonido_tiempo_limite.play()
 		pct_scan_mod = str(round(pct_scan * 100, 1))
 		pct_stamina = self.player.stamina / 100
+
 		gui(self.pantalla, 50, 10, pct_scan, ROJO, AMARILLO, VERDE, "Escaneando {0} %".format(pct_scan_mod))
 		gui(self.pantalla, 50, 100, pct_stamina, VERDE, AMARILLO, ROJO, "Stamina {0}".format(self.player.stamina))
 
@@ -222,11 +220,9 @@ class Game():
 					Portal(self, col, fila)
 				elif tile == "P":
 					if colPlayer == 0 and filaPlayer == 0:
-						self.player = PlayerOne(self, col, fila) # inicializo al player
-						print(self.player.pos.x , " -- ", self.player.pos.y)
-						print(col, fila)
+						self.player = PlayerOne(self, col, fila) # inicializo al player la primera vez
 					else:
-						self.player = PlayerOne(self, colPlayer, filaPlayer)
+						self.player = PlayerOne(self, colPlayer, filaPlayer) # inicializo al player en el rewspawn
 						self.player.stamina = self.respawn_stamina		
 				elif tile == "B":
 					Botaraña(self, col, fila)
@@ -253,7 +249,6 @@ class Game():
 		self.antivirus = pg.sprite.Group()
 		self.bots = pg.sprite.Group()
 		self.portales = pg.sprite.Group()
-		self.fondos = pg.sprite.Group()
 
 
 	def nuevo_juego(self):
@@ -290,15 +285,14 @@ class Game():
 		# la camara sigue al jugador
 		self.camara.update(self.player)
 
-
+		# Si se termina el tiempo se termina el juego
 		self.control_tiempo = pg.time.get_ticks() - self.tiempo_inicio
-		#print(self.control_tiempo)
-		#print(self.tiempo_final)
 		if self.tiempo_final - self.control_tiempo <= 0:
 			#print("tiempo: {0} -- tiempofinal: {1} -- timeout".format(self.control_tiempo, self.tiempo_final))
 			self.jugando = False
 
 
+		# si caemos al vacio respawneamos
 		if self.player.pos.y > 2000:
 			#print("caida")
 			self.respawn_stamina = self.player.stamina
@@ -312,7 +306,6 @@ class Game():
 			for portal in colision_portal:
 				if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
 					if self.c_niveles < 10:
-						#print("niveles_jugados {0}".format(self.c_niveles))
 						self.sonido_portal.play()
 						self.c_niveles += 1
 						self.tiempo_final += TIEMPO_NIVEL
@@ -320,7 +313,7 @@ class Game():
 						self.nuevo_juego()
 					else:
 						print("ganaste")
-						sys.exit(0)
+						self.quit()
 
 
 		# colision con botaraña, quita segundos
@@ -386,4 +379,5 @@ class Game():
 				self.update()			
 			self.dibujar()
 		pg.mixer.music.fadeout(800)
+		self.game_over()
 		

@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 # Pantalla
-TITULO = "Mi juego"
+TITULO = "Brain"
 ANCHO = 1440
 ALTO = 896
 MITAD_ANCHO = ANCHO / 2
@@ -38,7 +38,6 @@ DIFICULTAD_FACIL = 1.2
 DIFICULTAD_BATY = 1.5
 
 # Capas
-FONDO_LAYER = 0
 PLAYER_LAYER = 2
 PLATAFORMA_LAYER = 1
 ITEM_LAYER = 1
@@ -55,7 +54,9 @@ AMARILLO = (255, 255, 0)
 CELESTE = (0, 155, 155)
 
 # Tiles
-TAMAÑO_TILE = 40
+TAMAÑO_TILE = 32
+TAMAÑO_TILE_ITEM = int(TAMAÑO_TILE * 1.25)
+TAMAÑO_TILE_ENEMIGO = int(TAMAÑO_TILE * 2)
 ANCHO_GRILLA = ANCHO / TAMAÑO_TILE # 1024 = 32 ancho;  1440 = 45 ancho
 ALTO_GRILLA = ALTO / TAMAÑO_TILE # 640 = 20 alto; 896 = 28 alto
 OFFSETX_CAMARA = 200
@@ -95,16 +96,12 @@ SPRITESHEET = "spritesheet.png"
 SPRITESHEET_ARAÑA = "spritesheet_araña.png"
 
 
-FONDOS = {"fondo1": "fondo1.png",
-		"fondo2": "fondo2.png",
-		"fondo3": "fondo3.png",
-		"fondo4": "fondo4.png",
-		"fondo5": "fondo5.png",
-		"fondo6": "fondo6.png"}
-
 FONDO = ["fondo1.png", "fondo2.png", "fondo3.png", "fondo4.png", "fondo5.png", "fondo6.png"]
 
-IMG_MENU = {"titulo": "star_title.png", "fondo": "Virus_Fondo.png"}
+IMG_MENU = {"titulo": "titulo.png", 
+			"fondo": "brain_home.png",
+			"titulo_game_over": "",
+			"fondo_game_over": "game_over.png"}
 
 
 
@@ -140,26 +137,36 @@ SFX = {"musica_menu": "menu.ogg",
 
 # Menus
 
-INSTRUCCIONES_MENU_PRINCIPAL = ["Flechas para moverse (<- ->) -- Tecla [ESPACIO] para saltar -- Tecla [SHIFT] para acelerar (dash)",
-					   			"J para jugar",
-					   			"P para pausar",
-					   			"C creditos",
-					   			"ESC para salir"]
-INSTRUCCIONES_GAME_OVER = ["Gracias por jugar",
-							"ESC para salir"]
+INSTRUCCIONES_MENU_PRINCIPAL = ["Controles",
+								"Flechas para moverse (<- ->)", 
+								"[ESPACIO] para saltar",
+								"[SHIFT] para acelerar (dash)",
+								"[P] para pausar",
+								"[ESC] para salir",
+								"----------------------------",
+					   			"[J] >> Jugar",
+					   			"[C] >> Creditos",]
+INSTRUCCIONES_GAME_OVER = ["'Todo lo que vive esta destinado a morir'",
+							"Brain no pudo escapar de su prision impuesta",
+							"Gracias por jugar y ayudar a la destruccion del villano",
+							"[ESC] >> Salir a pensar si jugar es lo tuyo"]
 
 INSTRUCCIONES_CREDITOS = ["Creadores (orden alfabetico):",
-							"Bazzi Omar",
-							"Martin Matias",
-							"M para regresar al menu",
-							"ESC para salir"]
+							"Bazzi, Omar",
+							"Martin, Matias",
+							"-----------------------------",
+							"[M] >> Regresar al menu",
+							"[ESC] >> Salir"]
 
-INSTRUCCIONES_DIFICULTAD = ["F - Nivel Facil - Tiempo de sobra",
-							"M - Nivel Moderado - Para disfrutar tu tiempo",
-							"D - Nivel Dificil - Un desafio total"]
+INSTRUCCIONES_DIFICULTAD = ["Selecciona tu dificultad",
+							"------------------------",
+							"[F] >> Nivel Facil (Tiempo de sobra)",
+							"[M] >> Nivel Moderado (Para disfrutar del tiempo]",
+							"[D] >> Nivel Dificil  (Un desafio total)"]
 
 
 MUSICA_MENU_PRINCIPAL = os.path.join(CARPETA_SONIDOS, SFX["musica_menu"])
 MUSICA_GAME_OVER = os.path.join(CARPETA_SONIDOS, SFX["musica_creditos"])
 IMAGEN_MENU_PRINCIPAL = os.path.join(CARPETA_IMAGENES, IMG_MENU["titulo"])
 FONDO_MENU_PRINCIPAL = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo"])
+FONDO_GAME_OVER = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo_game_over"])
