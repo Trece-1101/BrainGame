@@ -310,7 +310,7 @@ class Botaraña(pg.sprite.Sprite):
 	def transformar(self, imagen):
 		# para que los personajes sean mas grandes que el player (el doble) escalamos todas las imagenes
 		# al utilizarlas, para eso creamos este metodo y lo usamos cada vez que asignamos una imagen
-		self.image = pg.transform.scale(imagen, (TAMAÑO_TILE_ENEMIGO, TAMAÑO_TILE_ENEMIGO))
+		self.image = pg.transform.scale(imagen, (TAMAÑO_TILE_BOTARAÑA, TAMAÑO_TILE_BOTARAÑA))
 
 	def cargar_imagenes(self):
 		self.cuadros_idle = [self.game.spritesheet_araña.get_imagen(132, 396, 64, 64),
@@ -417,7 +417,7 @@ class Botaraña(pg.sprite.Sprite):
 		self.animar()
 		self.acel = vec2(0, GRAVEDAD)
 
-		if self.pos.y > 1000:
+		if self.pos.y > 1800:
 			self.kill()
 
 		# para el comportamiento de la botaraña queremos que este en idle hasta que "detecte" al

@@ -36,6 +36,8 @@ def gui(pantalla, x, y, pct, color_lleno, color_medio, color_vacio, texto):
 	pg.draw.rect(pantalla, BLANCO, borde, 2)
 	dibujar_texto(pantalla, texto, 20, BLANCO, x + 55, y + 45)
 
+def gui_niveles(pantalla, x, y, texto):
+	dibujar_texto(pantalla, texto, 40, BLANCO, x, y)
 
 class Game():
 	def __init__(self):
@@ -125,7 +127,7 @@ class Game():
 	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
 		#self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
-		self.mapa = Mapa(carpeta_mapas / "nivel1.txt")
+		self.mapa = Mapa(carpeta_mapas / "nivel16.txt")
 		self.mapear()
 
 	def musica_random(self):
@@ -180,6 +182,7 @@ class Game():
 
 		gui(self.pantalla, 50, 10, pct_scan, ROJO, AMARILLO, VERDE, "Escaneando {0} %".format(pct_scan_mod))
 		gui(self.pantalla, 50, 100, pct_stamina, VERDE, AMARILLO, ROJO, "Stamina {0}".format(self.player.stamina))
+		gui_niveles(self.pantalla, MITAD_ANCHO, 20, "Nivel {0}/10".format(self.c_niveles))
 
 		#descomentar para ver la grilla
 		#self.dibujar_grilla()
@@ -210,9 +213,9 @@ class Game():
 					PlataformaExtremoI(self, col, fila)
 				elif tile == "2":
 					PlataformaExtremoD(self, col, fila)
-				elif tile == "5":
-					PlataformaTrampaCentro(self, col, fila)
 				elif tile == "4":
+					PlataformaTrampaCentro(self, col, fila)
+				elif tile == "5":
 					PlataformaTrampaI(self, col, fila)
 				elif tile == "6":
 					PlataformaTrampaD(self, col, fila)
@@ -293,7 +296,7 @@ class Game():
 
 
 		# si caemos al vacio respawneamos
-		if self.player.pos.y > 2000:
+		if self.player.pos.y > 1900:
 			#print("caida")
 			self.respawn_stamina = self.player.stamina
 			self.respawn()
@@ -364,7 +367,7 @@ class Game():
 
 
 	def game_over(self):
-		res = menu_game_over(self.pantalla, self.FPSclock)
+		res = plantilla_menu(self.pantalla, self.FPSclock, "game_over")
 		return res		
 
 
@@ -379,5 +382,4 @@ class Game():
 				self.update()			
 			self.dibujar()
 		pg.mixer.music.fadeout(800)
-		self.game_over()
 		

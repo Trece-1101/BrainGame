@@ -11,7 +11,7 @@ ALTO = 896
 MITAD_ANCHO = ANCHO / 2
 MITAD_ALTO = ALTO / 2
 FPS = 60
-ACTUALIZACION_CUADROS = 250
+ACTUALIZACION_CUADROS = 300
 ACTUALIZACION_CUADROS_ENEMIGOS = 400
 FUENTE = "arial"
 
@@ -57,6 +57,7 @@ CELESTE = (0, 155, 155)
 TAMAÑO_TILE = 32
 TAMAÑO_TILE_ITEM = int(TAMAÑO_TILE * 1.25)
 TAMAÑO_TILE_ENEMIGO = int(TAMAÑO_TILE * 2)
+TAMAÑO_TILE_BOTARAÑA = int(TAMAÑO_TILE * 1.5)
 ANCHO_GRILLA = ANCHO / TAMAÑO_TILE # 1024 = 32 ancho;  1440 = 45 ancho
 ALTO_GRILLA = ALTO / TAMAÑO_TILE # 640 = 20 alto; 896 = 28 alto
 OFFSETX_CAMARA = 200
@@ -96,7 +97,14 @@ SPRITESHEET = "spritesheet.png"
 SPRITESHEET_ARAÑA = "spritesheet_araña.png"
 
 
-FONDO = ["fondo1.png", "fondo2.png", "fondo3.png", "fondo4.png", "fondo5.png", "fondo6.png"]
+FONDO = ["fondo1.png", 
+		"fondo2.png", 
+		"fondo3.png", 
+		"fondo4.png", 
+		"fondo5.png", 
+		"fondo6.png",
+		"fondo7.png",
+		"fondo8.png"]
 
 IMG_MENU = {"titulo": "titulo.png", 
 			"fondo": "brain_home.png",

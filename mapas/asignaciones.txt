@@ -8,12 +8,14 @@ A = Acelerador
 S = Pad Salto
 C = Combotron
 T = Tiempo
+---
+0 = Extremo izq plataforma
+1 = Centro plataforma
+2 = Extremo derecho plataforma
+01111112 = Plataforma
 
-
-
-----------------
-
-10 lineas para arriba ya no llega con el salto, 9 es el salto maximo
-17 lineas para adelante ya no llega con el salto, 16 es el salto maximo
-saltando hacia adelante y para arriba son 8x8 lineas
-no poner plataformas por encima de la linea 10
+4 = Extremo izq plataforma trampa
+5 = Centro plataforma trampa
+6 = Extremo der plataforma trampa
+455556 = Plataforma trampa
+---

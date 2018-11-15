@@ -160,7 +160,7 @@ def stop_game_over(pantalla, clock):
 				if evento.key == pg.K_ESCAPE:
 					esperar = False
 					run = False
-	return [run, "0"]
+	return run
 
 
 def fade(pantalla): 
@@ -327,7 +327,7 @@ def plantilla_menu(pantalla, clock, tipo):
 		return [res[0], res[1]]
 	elif tipo == "game_over":
 		res = stop_game_over(pantalla, clock)
-		return [res[0]]
+		return res
 
 	fade(pantalla)
 	#return [res[0], res[1]]
@@ -344,6 +344,7 @@ def dibujar_texto(pantalla, texto, tamaño, color, x, y, align="topleft"):
 		# metodo para recibir un string y dibujarlo en pantalla
 		match_fuente = pg.font.match_font(FUENTE)
 		fuente = pg.font.Font(match_fuente, tamaño)
+		fuente.set_bold(True)
 		texto_surface = fuente.render(texto, True, color)
 		texto_rect = texto_surface.get_rect()
 		texto_rect.midtop = (x, y)
