@@ -48,21 +48,16 @@ class Game():
 		self.pantalla = pg.display.set_mode((ANCHO, ALTO)) # tamaño de la ventana del juego
 		pg.display.set_caption(TITULO) # titulo que aparece en la ventana
 		self.FPSclock = pg.time.Clock()
-		#self.run = True # bool para determinar si el juego (la ventana) va a seguir abierta
-		iniciar = plantilla_menu(self.pantalla, self.FPSclock, "menu_principal")
-		self.run = iniciar[0]	
-		#self.run = menu_principal(self.pantalla, self.FPSclock)
+		iniciar = menu(self.pantalla, self.FPSclock)
+		self.run = iniciar[0] # bool para determinar si el juego (la ventana) va a seguir abierta
 		self.jugando = True # bool para determinar el game_over o no	
 		self.fuente = pg.font.match_font(FUENTE)
-		#self.fondos = []	
 		self.cargar_datos()
 		self.pausado = False
 		self.tiempo_inicio = pg.time.get_ticks()
 		self.tiempo_final = TIEMPO_NIVEL * iniciar[1]
 		self.control_tiempo = 0		
 		self.c_niveles = 1
-		if verificar_controles():
-			self.j = pg.joystick.Joystick(0)
 		
 
 	def cargar_datos(self):
@@ -367,7 +362,7 @@ class Game():
 
 
 	def game_over(self):
-		res = plantilla_menu(self.pantalla, self.FPSclock, "game_over")
+		res = menu_game_over(self.pantalla, self.FPSclock)
 		return res		
 
 

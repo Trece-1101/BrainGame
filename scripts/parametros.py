@@ -22,8 +22,8 @@ PLAYER_ACEL = 100 # 120 px por segundo
 PLAYER_FRICCION = -0.1
 PLAYER_DASH = 2
 PLAYER_STAMINA = 100
-PLAYER_SALTO = -2500
-CORTE_SALTO = -500
+PLAYER_SALTO = -2300
+CORTE_SALTO = -300
 GRAVEDAD = 150
 BOOST_POW = -50
 PLAYER_VIDA_INICIAL = 50
@@ -130,8 +130,8 @@ SPRITESHEETS = {"bot": "Prueba_sprite.png"}
 # sonidos
 CARPETA_SONIDOS = Path("sfx") 
 
-SFX = {"musica_menu": "menu.ogg", 
-		"musica": ["musica1.wav", "musica2.wav", "musica3.wav", "musica4.wav"],
+SFX = {"musica_menu": "DarkIntro.ogg", 
+		"musica": ["musica1.wav", "musica2.wav", "musica3.wav", "musica4.wav", "menu.ogg"],
 		"musica_creditos": "creditos.wav",
 		"boost": "boost.wav",
 		"tiempotron": "tiempotron.wav",

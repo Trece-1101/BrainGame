@@ -19,9 +19,9 @@ def stop_creditos(pantalla, clock):
 					run = False
 				elif evento.key == pg.K_m:
 					esperar = False
-					run = True				
-					menu(pantalla, clock)
-	return [run, "0"]
+					run = False
+
+	return run
 
 
 def creditos(pantalla, clock):
@@ -59,7 +59,8 @@ def creditos(pantalla, clock):
 
 
 		pg.display.flip()
-		stop_creditos(pantalla, clock)
+		res = stop_creditos(pantalla, clock)
+		return res
 
 def stop_dificultad(pantalla, clock):
 	esperar = True
@@ -120,7 +121,6 @@ def menu_dificultad(pantalla, clock):
 
 		pg.display.flip()
 		dificultad = stop_dificultad(pantalla, clock)
-		#fade(pantalla)
 		return dificultad
 
 def stop_menu_principal(pantalla, clock):
@@ -140,11 +140,11 @@ def stop_menu_principal(pantalla, clock):
 				elif evento.key == pg.K_j:
 					esperar = False
 					run = True
-					#dificultad = menu_dificultad(pantalla, clock)
 					dificultad = menu_dificultad(pantalla, clock)				
 				elif evento.key == pg.K_c:
-					#creditos(pantalla, clock)
-					plantilla_menu(pantalla, clock, "creditos")
+					cr = True
+					while cr:
+						cr = creditos(pantalla, clock)
 
 	return [run, dificultad]
 
@@ -172,7 +172,7 @@ def fade(pantalla):
 		pg.display.update()
 		pg.time.delay(1)
 
-'''def menu(pantalla, clock):
+def menu(pantalla, clock):
 		# pantalla de menu principal
 		pg.mixer.music.load(MUSICA_MENU_PRINCIPAL)
 		pg.mixer.music.play(loops=-1)
@@ -215,9 +215,9 @@ def fade(pantalla):
 		pg.display.flip()
 		res = stop_menu_principal(pantalla, clock)
 		fade(pantalla)
-		return [res[0], res[1]]'''
+		return [res[0], res[1]]
 
-'''def menu_game_over(pantalla, clock):
+def menu_game_over(pantalla, clock):
 		pg.mixer.music.load(MUSICA_GAME_OVER)
 		pg.mixer.music.play(loops=-1)
 		fuente = pg.font.Font('freesansbold.ttf', 22)
@@ -252,9 +252,9 @@ def fade(pantalla):
 
 		pg.display.flip()
 		res = stop_game_over(pantalla, clock)
-		return res'''
+		return res
 
-def plantilla_menu(pantalla, clock, tipo):
+'''def plantilla_menu(pantalla, clock, tipo):
 	if tipo == "menu_principal":
 		musica = MUSICA_MENU_PRINCIPAL
 		tamaño = 24
@@ -330,7 +330,7 @@ def plantilla_menu(pantalla, clock, tipo):
 		return res
 
 	fade(pantalla)
-	#return [res[0], res[1]]
+	#return [res[0], res[1]]'''
 
 
 def pantalla_pausa(pantalla):
