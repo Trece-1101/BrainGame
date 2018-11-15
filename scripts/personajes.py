@@ -245,10 +245,8 @@ class Botaraña(pg.sprite.Sprite):
 		self.cuadro_actual = 0
 		self.ultimo_update = 0
 		self.type = items["B"]
-		self.image = pg.Surface((TAMAÑO_TILE, TAMAÑO_TILE))
-		self.image.fill(NEGRO)
-		#self.cargar_imagenes()
-		#self.image = self.cuadros_idle[0]
+		self.cargar_imagenes()
+		self.image = self.cuadros_idle[0]
 		self.rect = self.image.get_rect()
 		self.vel = vec2(0, 0)
 		self.acel = vec2(0, 0)
@@ -257,61 +255,82 @@ class Botaraña(pg.sprite.Sprite):
 		self.acel = vec2(0, 0)
 		self.vivo = True
 		self.idle = True
-		self.mascara_col = pg.mask.from_surface(self.image)
-
-	def cargar_imagenes(self):
-		pass
-		'''self.cuadros_idle = [self.game.spritesheet.get_imagen(),
-							self.game.spritesheet.get_imagen(),
-							self.game.spritesheet.get_imagen(),
-							self.game.spritesheet.get_imagen()]
-
-
-		self.cuadros_caminar_d = [self.game.spritesheet.get_imagen(),
-								self.game.spritesheet.get_imagen(),
-								self.game.spritesheet.get_imagen(),
-								self.game.spritesheet.get_imagen()]	
-
-		self.cuadros_caminar_i = [self.game.spritesheet.get_imagen(),
-								self.game.spritesheet.get_imagen(),
-								self.game.spritesheet.get_imagen(),
-								self.game.spritesheet.get_imagen()]
-
-		self.cuadros_correr_d = [self.game.spritesheet.get_imagen(),]		
-
 		
 
-		#self.cuadro_saltar = self.game.spritesheet_player.get_imagen(438, 93, 67, 94)
+	def cargar_imagenes(self):
+		self.cuadros_idle = [self.game.spritesheet_araña.get_imagen(132, 396, 64, 64),
+							self.game.spritesheet_araña.get_imagen(132, 330, 64, 64),
+							self.game.spritesheet_araña.get_imagen(132, 264, 64, 64),
+							self.game.spritesheet_araña.get_imagen(132, 198, 64, 64)]
+
+
+		self.cuadros_caminar_d = [self.game.spritesheet_araña.get_imagen(0, 396, 64, 64),
+								self.game.spritesheet_araña.get_imagen(0, 330, 64, 64),
+								self.game.spritesheet_araña.get_imagen(0, 264, 64, 64),
+								self.game.spritesheet_araña.get_imagen(0, 198, 64, 64)]	
+
+		self.cuadros_caminar_i = [self.game.spritesheet_araña.get_imagen(0, 132, 64, 64),
+								self.game.spritesheet_araña.get_imagen(66, 132, 64, 64),
+								self.game.spritesheet_araña.get_imagen(66, 66, 64, 64),
+								self.game.spritesheet_araña.get_imagen(66, 0, 64, 64)]
+
+		self.cuadros_correr_d = [self.game.spritesheet_araña.get_imagen(198, 198, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 132, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 66, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 0, 64, 64)]
+
+		self.cuadros_correr_ii = [self.game.spritesheet_araña.get_imagen(264, 0, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 396, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 330, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 264, 64, 64)]
+
+		self.cuadros_correr_i = []
+		for cuadro in self.cuadros_correr_ii:
+			self.cuadros_correr_i.append(pg.transform.flip(cuadro, True, False))				
+
+		
+		self.cuadro_muerte = self.game.spritesheet_araña.get_imagen(132, 66, 64, 64)
+
 
 		# quitar el fondo negro
-		#for cuadro in self.cuadros_correr_d:
-		#	cuadro.set_colorkey(NEGRO)
+		for cuadro in self.cuadros_idle:
+			cuadro.set_colorkey(NEGRO)
 
-		#for cuadro in self.cuadros_correr_i:
-		#	cuadro.set_colorkey(NEGRO)
+		for cuadro in self.cuadros_caminar_d:
+			cuadro.set_colorkey(NEGRO)
 
-		#for cuadro in self.cuadros_idle:
-		#	cuadro.set_colorkey(NEGRO)'''
+		for cuadro in self.cuadros_caminar_i:
+			cuadro.set_colorkey(NEGRO)
+
+		for cuadro in self.cuadros_correr_d:
+			cuadro.set_colorkey(NEGRO)
+
+		for cuadro in self.cuadros_correr_i:
+			cuadro.set_colorkey(NEGRO)
+
+		self.cuadro_muerte.set_colorkey(NEGRO)
 
 		
 
 
 	def animar(self):
-		este_instante = pg.time.get_ticks()
-
-		if self.idle:
-			if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
-				self.ultimo_update = este_instante
-				self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_idle)
-				self.image = self.cuadros_idle[self.cuadro_actual]
+		if not self.vivo:
+			self.image = self.cuadro_muerte
 		else:
-			if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
-				self.ultimo_update = este_instante
-				self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_correr_d)				
-				if self.vel.x > 0:
-					self.image = self.cuadros_correr_d[self.cuadro_actual]
-				else:
-					self.image = self.cuadros_correr_i[self.cuadro_actual]
+			este_instante = pg.time.get_ticks()
+			if self.idle:
+				if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
+					self.ultimo_update = este_instante
+					self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_idle)
+					self.image = self.cuadros_idle[self.cuadro_actual]
+			else:
+				if este_instante - self.ultimo_update > ACTUALIZACION_CUADROS:
+					self.ultimo_update = este_instante
+					self.cuadro_actual = (self.cuadro_actual + 1) % len(self.cuadros_correr_d)				
+					if self.vel.x > 0:
+						self.image = self.cuadros_correr_d[self.cuadro_actual]
+					elif self.vel.x < 0:
+						self.image = self.cuadros_correr_i[self.cuadro_actual]
 
 		# mascara de colision
 		self.mascara_col = pg.mask.from_surface(self.image)
@@ -324,19 +343,21 @@ class Botaraña(pg.sprite.Sprite):
 
 
 	def update(self):
-		#self.animar()
+		self.animar()
 		self.acel = vec2(0, GRAVEDAD)
 		dist_obj = self.pos - self.game.player.pos
 		#print(self.pos)
 		#print(dist_obj[1])
-		if (abs(dist_obj[0]) < choice(RADIO_DETECCION)) and (abs(dist_obj[1]) < 70):
+		if (abs(dist_obj[0]) < choice(RADIO_DETECCION)) and (abs(dist_obj[1]) < 70) and self.vivo:
 			#print("detectado")
 			if dist_obj[0] > 0:             
 				self.acel.x -= choice(VEL_BOT)
 			else:
 				self.acel.x += choice(VEL_BOT)
+			self.idle = False
 		else:
-			self.acel.x = 0				
+			self.acel.x = 0
+			self.idle = True				
 			#print("no detectado")
 
 		self.vel += self.acel

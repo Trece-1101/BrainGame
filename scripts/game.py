@@ -66,6 +66,7 @@ class Game():
 
 		# spritesheet_completo			
 		self.spritesheet = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET))
+		self.spritesheet_araña = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET_ARAÑA))
 
 		# fondos
 		'''self.fondos = []
@@ -127,7 +128,7 @@ class Game():
 	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
 		#self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
-		self.mapa = Mapa(carpeta_mapas / "nivel4.txt")
+		self.mapa = Mapa(carpeta_mapas / "nivel6.txt")
 		#print(nivel)
 		self.mapear()
 
@@ -323,7 +324,7 @@ class Game():
 
 
 		# colision con botaraña, quita segundos
-		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, False)
+		colision_enemigo_bot = pg.sprite.spritecollide(self.player, self.bots, False, pg.sprite.collide_mask)
 		for enemigo in colision_enemigo_bot:
 			if enemigo.type == "BotAraña":
 				if enemigo.vivo:					
@@ -336,7 +337,7 @@ class Game():
 		colision_enemigo_av = pg.sprite.spritecollide(self.player, self.antivirus, False, pg.sprite.collide_mask)
 		for enemigo in colision_enemigo_av:		
 			if enemigo.type == "Antivirus":
-				if enemigo.vivo == True:
+				if enemigo.vivo:
 					self.sonido_lastimado.play()
 					enemigo.morir()									
 					self.tiempo_final -= DANIO_AV

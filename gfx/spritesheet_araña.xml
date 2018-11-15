@@ -1,0 +1,32 @@
+<TextureAtlas imagePath="araña_SpriteSheet.png">
+	<SubTexture name="Araña_Caminata-02 (Personalizado).png" x="0" y="330" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-03 (Personalizado).png" x="0" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-04 (Personalizado).png" x="0" y="198" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-Invert-02 (Personalizado).png" x="0" y="66" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-Invert-03 (Personalizado).png" x="0" y="0" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-Invert-04 (Personalizado).png" x="132" y="0" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata-Invert_Mesa de trabajo 1 (Personalizado).png" x="0" y="132" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Invert-02 (Personalizado).png" x="66" y="132" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Invert-03 (Personalizado).png" x="66" y="66" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Invert-04 (Personalizado).png" x="66" y="0" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Invert_Mesa de trabajo 1 (Personalizado).png" x="66" y="198" width="64" height="64"/>
+	<SubTexture name="Araña_Caminata_Mesa de trabajo 1 (Personalizado).png" x="0" y="396" width="64" height="64"/>
+	<SubTexture name="Araña_Dash_Invert-02 (Personalizado).png" x="198" y="396" width="64" height="64"/>
+	<SubTexture name="Araña_Dash_Invert-03 (Personalizado).png" x="198" y="330" width="64" height="64"/>
+	<SubTexture name="Araña_Dash_Invert-04 (Personalizado).png" x="198" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Dash_Invert_Mesa de trabajo 1 (Personalizado).png" x="264" y="0" width="64" height="64"/>
+	<SubTexture name="Araña_Idle-02 (Personalizado).png" x="132" y="330" width="64" height="64"/>
+	<SubTexture name="Araña_Idle-03 (Personalizado).png" x="132" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Idle-04 (Personalizado).png" x="132" y="198" width="64" height="64"/>
+	<SubTexture name="Araña_Idle_Mesa de trabajo 1 (Personalizado).png" x="132" y="396" width="64" height="64"/>
+	<SubTexture name="Araña_Muerte_Victoria-02 (Personalizado).png" x="132" y="66" width="64" height="64"/>
+	<SubTexture name="Araña_Muerte_Victoria_Mesa de trabajo 1 (Personalizado).png" x="132" y="132" width="64" height="64"/>
+	<SubTexture name="Araña_Salto-02 (Personalizado).png" x="66" y="396" width="64" height="64"/>
+	<SubTexture name="Araña_Salto-03 (Personalizado).png" x="66" y="330" width="64" height="64"/>
+	<SubTexture name="Araña_Salto-04 (Personalizado).png" x="66" y="264" width="64" height="64"/>
+	<SubTexture name="Araña_Salto_Mesa de trabajo 1 (Personalizado).png" x="264" y="66" width="64" height="64"/>
+	<SubTexture name="Araña_dash-02 (Personalizado).png" x="198" y="132" width="64" height="64"/>
+	<SubTexture name="Araña_dash-03 (Personalizado).png" x="198" y="66" width="64" height="64"/>
+	<SubTexture name="Araña_dash-04 (Personalizado).png" x="198" y="0" width="64" height="64"/>
+	<SubTexture name="Araña_dash_Mesa de trabajo 1 (Personalizado).png" x="198" y="198" width="64" height="64"/>
+</TextureAtlas>

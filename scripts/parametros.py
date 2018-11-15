@@ -92,20 +92,8 @@ RADIO_DETECCION = [200, 250, 300, 350, 400]
 # imagenes
 CARPETA_IMAGENES = Path("gfx")
 SPRITESHEET = "spritesheet.png"
+SPRITESHEET_ARAÑA = "spritesheet_araña.png"
 
-BRAIN = {"idle1": (132, 264, 64, 64),
-		"idle2": (132, 198, 64, 64),
-		"idle3": (132, 132, 64, 64),
-		"idle4": (132, 66, 64, 64),
-		"idle5": (132, 0, 64, 64),
-		"caminar1": (66, 396, 64, 64),
-		"caminar2": (66, 330, 64, 64),
-		"caminar3": (66, 264, 64, 64),
-		"caminar4": (66, 198, 64, 64),
-		"correr1": (66, 132, 64, 64),
-		"correr2": (66, 66, 64, 64),
-		"saltar":(0 , 396, 64, 64),
-		"morir": (66 , 0, 64, 64)}
 
 FONDOS = {"fondo1": "fondo1.png",
 		"fondo2": "fondo2.png",
@@ -133,7 +121,6 @@ IMG_ENEMIGOS = {"av_idle": "avIdle.png",
 
 
 SPRITESHEETS = {"bot": "Prueba_sprite.png"}
-SPRITESHEET_ARAÑA = "araña.png"
 
 # sonidos
 CARPETA_SONIDOS = Path("sfx") 
