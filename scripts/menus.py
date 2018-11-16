@@ -2,6 +2,7 @@ import pygame as pg
 import os
 from scripts.parametros import *
 from scripts.game import *
+from scripts.tutorial import *
 
 
 
@@ -24,14 +25,12 @@ def stop_creditos(pantalla, clock):
 
 
 def creditos(pantalla, clock):
-	#pg.mixer.music.load(MUSICA_GAME_OVER)
-	#pg.mixer.music.play(loops=-1)
-	fuente = pg.font.Font('freesansbold.ttf', 28)
+	fuente = pg.font.Font('freesansbold.ttf', 26)
 	fuente.set_bold(True)
 	
 	titulo = pg.image.load(IMAGEN_MENU_PRINCIPAL)
 	img_titulo = titulo.get_rect()
-	titulo_top = 20
+	titulo_top = 10
 	img_titulo.top = titulo_top
 	img_titulo.centerx = MITAD_ANCHO
 	titulo_top += img_titulo.height
@@ -54,7 +53,7 @@ def creditos(pantalla, clock):
 		print("inicio_timer", inicio_timer)
 		inst = fuente.render(instrucciones[i], 1, BLANCO)
 		instRect = inst.get_rect()
-		titulo_top += 10 # 10 pixeles entre linea y linea
+		titulo_top += 5 # 10 pixeles entre linea y linea
 		instRect.top = titulo_top + 280
 		instRect.centerx = MITAD_ANCHO
 		titulo_top += instRect.height
@@ -72,12 +71,12 @@ def creditos(pantalla, clock):
 
 
 def controles(pantalla, clock):
-	fuente = pg.font.Font('freesansbold.ttf', 24)
+	fuente = pg.font.Font('freesansbold.ttf', 18)
 	fuente.set_bold(True)
 	
 	titulo = pg.image.load(IMAGEN_MENU_PRINCIPAL)
 	img_titulo = titulo.get_rect()
-	titulo_top = 20
+	titulo_top = 10
 	img_titulo.top = titulo_top
 	img_titulo.centerx = MITAD_ANCHO
 	titulo_top += img_titulo.height
@@ -95,7 +94,7 @@ def controles(pantalla, clock):
 	for i in range(len(instrucciones)):
 		inst = fuente.render(instrucciones[i], 1, BLANCO)
 		instRect = inst.get_rect()
-		titulo_top += 10 # 10 pixeles entre linea y linea
+		titulo_top += 3 # 10 pixeles entre linea y linea
 		instRect.top = titulo_top + 280
 		instRect.centerx = MITAD_ANCHO
 		titulo_top += instRect.height
@@ -134,12 +133,12 @@ def stop_dificultad(pantalla, clock):
 def menu_dificultad(pantalla, clock):
 	pg.mixer.music.load(MUSICA_MENU_PRINCIPAL)
 	pg.mixer.music.play(loops=-1)
-	fuente = pg.font.Font('freesansbold.ttf', 30)
+	fuente = pg.font.Font('freesansbold.ttf', 28)
 	fuente.set_bold(True)
 	
 	titulo = pg.image.load(IMAGEN_MENU_PRINCIPAL)
 	img_titulo = titulo.get_rect()
-	titulo_top = 20
+	titulo_top = 10
 	img_titulo.top = titulo_top
 	img_titulo.centerx = MITAD_ANCHO
 	titulo_top += img_titulo.height
@@ -157,8 +156,8 @@ def menu_dificultad(pantalla, clock):
 	for i in range(len(instrucciones)):
 		inst = fuente.render(instrucciones[i], 1, BLANCO)
 		instRect = inst.get_rect()
-		titulo_top += 10 # 10 pixeles entre linea y linea
-		instRect.top = titulo_top + 280
+		titulo_top += 5 # 10 pixeles entre linea y linea
+		instRect.top = titulo_top + 220
 		instRect.centerx = MITAD_ANCHO
 		titulo_top += instRect.height
 		pantalla.blit(inst, instRect)
@@ -215,12 +214,56 @@ def fade(pantalla):
 		pg.display.update()
 		pg.time.delay(1)		
 
+def intro(pantalla, clock, instrucciones):
+	fuente = pg.font.Font('freesansbold.ttf', 22)
+	fuente.set_bold(True)
+	
+	titulo = pg.image.load(IMAGEN_INTRO)
+	img_titulo = titulo.get_rect()
+	titulo_top = 0
+	img_titulo.top = titulo_top
+	img_titulo.centerx = MITAD_ANCHO
+	titulo_top += img_titulo.height
+
+	fondo = pg.image.load(FONDO_INTRO)
+	img_fondo= fondo.get_rect()
+	img_fondo.top = 0
+	img_fondo.centerx = MITAD_ANCHO
+
+	instrucciones = instrucciones
+
+	pantalla.blit(fondo, img_fondo)
+	pantalla.blit(titulo, img_titulo)
+	
+	pg.display.flip()
+
+	timer_off = False
+	for i in range(len(instrucciones)):
+		inicio_timer = pg.time.get_ticks()
+		print("inicio_timer", inicio_timer)
+		inst = fuente.render(instrucciones[i], 1, BLANCO)
+		instRect = inst.get_rect()
+		titulo_top += 2 # 10 pixeles entre linea y linea
+		instRect.top = titulo_top + 10
+		instRect.centerx = MITAD_ANCHO
+		titulo_top += instRect.height
+		while  not timer_off:						
+			fin_timer = pg.time.get_ticks()
+			res = (fin_timer - inicio_timer)
+			if res > TIMER_OFF_INSTRUCCIONES:
+				timer_off = True
+		pantalla.blit(inst, instRect)
+		pg.display.flip()
+		timer_off = False
+
+
+
 def menu_principal(pantalla, clock):
 	menu = True
 	pg.mixer.music.load(MUSICA_MENU_PRINCIPAL)
 	pg.mixer.music.play(loops=-1)
 	while menu:		
-		fuente = pg.font.Font('freesansbold.ttf', 24)
+		fuente = pg.font.Font('freesansbold.ttf', 22)
 		fuente.set_bold(True)
 		
 		# Imagen principal que sirve de titulo
@@ -241,11 +284,11 @@ def menu_principal(pantalla, clock):
 		for i in range(len(instrucciones)):
 			inst = fuente.render(instrucciones[i], 1, BLANCO)
 			instRect = inst.get_rect()
-			titulo_top += 10 # 10 pixeles entre linea y linea
+			titulo_top += 5 # 10 pixeles entre linea y linea
 			if i == 0:
-				instRect.top = titulo_top + 300
+				instRect.top = titulo_top + 220
 			else:
-				instRect.top = titulo_top + 320
+				instRect.top = titulo_top + 230
 			instRect.centerx = MITAD_ANCHO
 			titulo_top += instRect.height
 			pantalla.blit(inst, instRect)
@@ -276,9 +319,21 @@ def menu_principal(pantalla, clock):
 					elif evento.key == pg.K_c:
 						creditos(pantalla, clock)
 						esperar = False
-					elif evento.key == pg.K_t:
+					elif evento.key == pg.K_r:
 						controles(pantalla,clock)
 						esperar = False
+					elif evento.key == pg.K_t:
+						t = Tutorial()
+						while t.run:
+							t.nuevo_juego()
+						pg.mixer.music.load(MUSICA_MENU_PRINCIPAL)
+						pg.mixer.music.play(loops=-1)
+						esperar = False
+					elif evento.key == pg.K_i:
+						intro(pantalla, clock, INSTRUCCIONES_INTRO_1)
+						intro(pantalla, clock, INSTRUCCIONES_INTRO_2)
+						intro(pantalla, clock, INSTRUCCIONES_INTRO_3)
+						esperar = false
 
 	
 	
@@ -286,50 +341,7 @@ def menu_principal(pantalla, clock):
 	fade(pantalla)
 	return [run, dificultad]
 
-'''def menu(pantalla, clock):
-	# pantalla de menu principal
-	pg.mixer.music.load(MUSICA_MENU_PRINCIPAL)
-	pg.mixer.music.play(loops=-1)
-	fuente = pg.font.Font('freesansbold.ttf', 24)
-	fuente.set_bold(True)
-	
-	# Imagen principal que sirve de titulo
-	titulo = pg.image.load(IMAGEN_MENU_PRINCIPAL)
-	img_titulo = titulo.get_rect()
-	titulo_top = 20
-	img_titulo.top = titulo_top
-	img_titulo.centerx = MITAD_ANCHO
-	titulo_top += img_titulo.height
 
-	fondo = pg.image.load(FONDO_MENU_PRINCIPAL)
-	img_fondo= fondo.get_rect()
-	img_fondo.top = 0
-	img_fondo.centerx = MITAD_ANCHO
-
-	# Pasar las instrucciones como una lista para controlar las lineas
-	instrucciones = INSTRUCCIONES_MENU_PRINCIPAL
-
-	pantalla.blit(fondo, img_fondo)
-	pantalla.blit(titulo, img_titulo)
-
-
-	for i in range(len(instrucciones)):
-		inst = fuente.render(instrucciones[i], 1, BLANCO)
-		instRect = inst.get_rect()
-		titulo_top += 10 # 10 pixeles entre linea y linea
-		if i == 0:
-			instRect.top = titulo_top + 250
-		else:
-			instRect.top = titulo_top + 260
-		instRect.centerx = MITAD_ANCHO
-		titulo_top += instRect.height
-		pantalla.blit(inst, instRect)
-
-
-	pg.display.flip()
-	res = stop_menu_principal(pantalla, clock)
-	fade(pantalla)
-	return [res[0], res[1]]'''
 
 def menu_game_over(pantalla, clock):
 	pg.mixer.music.load(MUSICA_GAME_OVER)
@@ -339,7 +351,7 @@ def menu_game_over(pantalla, clock):
 	
 	titulo = pg.image.load(IMAGEN_MENU_PRINCIPAL)
 	img_titulo = titulo.get_rect()
-	titulo_top = 10
+	titulo_top = 5
 	img_titulo.top = titulo_top
 	img_titulo.centerx = MITAD_ANCHO
 	titulo_top += img_titulo.height
@@ -364,8 +376,8 @@ def menu_game_over(pantalla, clock):
 		inicio_timer = pg.time.get_ticks()
 		inst = fuente.render(instrucciones[i], 1, BLANCO)
 		instRect = inst.get_rect()
-		titulo_top += 10 # 10 pixeles entre linea y linea
-		instRect.top = titulo_top + 450
+		titulo_top += 5 # 10 pixeles entre linea y linea
+		instRect.top = titulo_top + 240
 		instRect.centerx = MITAD_ANCHO
 		titulo_top += instRect.height
 		while  not timer_off:						
@@ -389,12 +401,12 @@ def truco_game_win(pantalla, clock):
 	
 	titulo = pg.image.load(IMAGEN_MENU_PRINCIPAL)
 	img_titulo = titulo.get_rect()
-	titulo_top = 10
+	titulo_top = 5
 	img_titulo.top = titulo_top
 	img_titulo.centerx = MITAD_ANCHO
 	titulo_top += img_titulo.height
 
-	fondo = pg.image.load(FONDO_GAME_OVER)
+	fondo = pg.image.load(FONDO_MENU_WIN)
 	img_fondo= fondo.get_rect()
 	img_fondo.top = 0
 	img_fondo.centerx = MITAD_ANCHO
@@ -412,8 +424,8 @@ def truco_game_win(pantalla, clock):
 	for i in range(len(instrucciones2)):
 		inst = fuente.render(instrucciones2[i], 1, BLANCO)
 		instRect = inst.get_rect()
-		titulo_top += 10 # 10 pixeles entre linea y linea
-		instRect.top = titulo_top + 450
+		titulo_top += 5 # 10 pixeles entre linea y linea
+		instRect.top = titulo_top + 250
 		instRect.centerx = MITAD_ANCHO
 		titulo_top += instRect.height
 		pantalla.blit(inst, instRect)
@@ -433,7 +445,7 @@ def menu_game_win(pantalla, clock):
 	img_titulo.centerx = MITAD_ANCHO
 	titulo_top += img_titulo.height
 
-	fondo = pg.image.load(FONDO_GAME_OVER)
+	fondo = pg.image.load(FONDO_MENU_WIN)
 	img_fondo= fondo.get_rect()
 	img_fondo.top = 0
 	img_fondo.centerx = MITAD_ANCHO
@@ -452,8 +464,8 @@ def menu_game_win(pantalla, clock):
 		inicio_timer = pg.time.get_ticks()
 		inst = fuente.render(instrucciones[i], 1, BLANCO)
 		instRect = inst.get_rect()
-		titulo_top += 10 # 10 pixeles entre linea y linea
-		instRect.top = titulo_top + 450
+		titulo_top += 5 # 10 pixeles entre linea y linea
+		instRect.top = titulo_top + 250
 		instRect.centerx = MITAD_ANCHO
 		titulo_top += instRect.height
 		while  not timer_off:						

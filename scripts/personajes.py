@@ -278,8 +278,18 @@ class PlayerOne(pg.sprite.Sprite):
 				self.acel.x = -(PLAYER_ACEL * PLAYER_DASH)
 				self.stamina -= 1
 
-		
+		'''for evento in pg.event.get():
+			if evento.type == pg.JOYBUTTONDOWN:
+				if evento.button == BOTON_X:
+					print("boton")
+					if self.sentido == "D" and self.stamina > 0:
+						self.acel.x = PLAYER_ACEL * PLAYER_DASH
+						self.stamina -= 1
+					elif self.sentido == "I" and self.stamina > 0:
+						self.acel.x = -(PLAYER_ACEL * PLAYER_DASH)
+						self.stamina -= 1'''
 
+			
 
 		self.fisica_aceleracion()
 

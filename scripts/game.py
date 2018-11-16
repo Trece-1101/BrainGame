@@ -57,6 +57,9 @@ class Game():
 		self.tiempo_final = TIEMPO_NIVEL * iniciar[1]
 		self.control_tiempo = 0		
 		self.c_niveles = 1
+		if verificar_controles():
+			self.j = pg.joystick.Joystick(0)
+			self.j.init()
 		
 		
 
@@ -155,19 +158,19 @@ class Game():
 					self.player.control_salto()
 
 			if evento.type == pg.JOYBUTTONDOWN:
-				if evento.button == START:
+				if self.j.get_button(START):
 					self.pausado = not self.pausado
-				elif evento.button == BACK:
+				elif self.j.get_button(BACK):
 					sys.exit(0)
-                elif evento.button == BOTON_A:
-                    self.sonido_salto.play()
+				elif self.j.get_button(BOTON_A):
+					self.sonido_salto.play()
 					self.player.saltar()
-                elif evento.button == BOTON_X:
-                    self.sonido_boost.play()
+				elif self.j.get_button(BOTON_X):
+					self.sonido_boost.play()
 
-            if evento.type == pg.JOYBUTTONUP:
-            	if evento.button == BOTON_X:
-            		self.player.control_salto()
+			if evento.type == pg.JOYBUTTONUP:
+				if self.j.get_button(BOTON_X):
+					self.player.control_salto()
 
 		
 
@@ -241,7 +244,6 @@ class Game():
 					Portal(self, col, fila)
 				elif tile == "P":
 					if colPlayer == 0 and filaPlayer == 0:
-						#PlataformaCentro(self, col, fila + 1)
 						self.player = PlayerOne(self, col, fila) # inicializo al player la primera vez
 					else:
 						self.player = PlayerOne(self, colPlayer, filaPlayer) # inicializo al player en el rewspawn

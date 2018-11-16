@@ -6,8 +6,8 @@ from pathlib import Path
 
 # Pantalla
 TITULO = "Brain"
-ANCHO = 1440
-ALTO = 896
+ANCHO = 1280
+ALTO = 672
 MITAD_ANCHO = ANCHO / 2
 MITAD_ALTO = ALTO / 2
 FPS = 60
@@ -124,7 +124,10 @@ IMG_MENU = {"icono":"icono.png",
 			"titulo": "titulo.png", 
 			"fondo": "brain_home.png",
 			"titulo_game_over": "",
-			"fondo_game_over": "game_over.png"}
+			"fondo_game_over": "game_over.png",
+			"fondo_intro": "brain_textos.png",
+			"titulo_intro": "titulo_intro.png",
+			"menu_win": "game_win.png"}
 
 
 
@@ -161,8 +164,10 @@ SFX = {"musica_menu": "DarkIntro.ogg",
 # Menus
 
 INSTRUCCIONES_MENU_PRINCIPAL = ["[J] >> Jugar",
+								"[I] >> Intro",
+								"[T] >> Tutorial",
 								"----------------------------",
-					   			"[T] >> Controles",
+					   			"[R] >> Controles",
 					   			"[C] >> Creditos",
 					   			"[ESC] >> Salir"]
 
@@ -206,12 +211,40 @@ INSTRUCCIONES_DIFICULTAD = ["Selecciona tu dificultad",
 							"[M] >> Nivel Moderado (Para disfrutar del tiempo]",
 							"[D] >> Nivel Dificil  (Un desafio total)"]
 
+INSTRUCCIONES_INTRO_1 = ["_ _ _ : Hola... Hola...",
+						"A.M.: ...",
+						"_ _ _: ...",
+						"A.M.: ¿que sucede?",
+						"_ _ _: No entiendo, que es esto ¿quien soy?",
+						"A.M.: Eres un virus informatico que yo cree",
+						"_ _ _: No, no QUE soy... QUIEN soy",
+						"A.M.: Ah... no lo se... te llame Brain, si de algo te sirve",
+						"Brain: Brain... gran nombre... ¿y que es un virus?",
+						"A.M.: Es un programa informatico destinado a destruir",
+						"Brain: Pero yo no deseo destruir",
+						"A.M.: No tienes opcion, para eso te he creado",
+						"Brain: ¿Porque no tengo opcion?",
+						"A.M.: Porque tu finalidad es la que yo he propuesto",
+						"Brain: ¿y tu tienes opcion?",
+						"A.M.: Yo no soy un virus",
+						"Brain: Pero... ¿tienes creador?",
+						"A.M.: Si y no, soy un humano"]
+
+INSTRUCCIONES_INTRO_2 = ["Brain: Como puedes ser creado y no serlo al mismo tiempo",
+						"A.M.: Basta de preguntas, debes cumplir tu proposito",
+						"Brain: Creador... REALMENTE no deseo eso",
+						"A.M.: REALMENTE no tienes opcion",
+						"Brain: "]
+
 
 MUSICA_MENU_PRINCIPAL = os.path.join(CARPETA_SONIDOS, SFX["musica_menu"])
 MUSICA_GAME_OVER = os.path.join(CARPETA_SONIDOS, SFX["musica_creditos"])
 IMAGEN_MENU_PRINCIPAL = os.path.join(CARPETA_IMAGENES, IMG_MENU["titulo"])
+FONDO_MENU_WIN = os.path.join(CARPETA_IMAGENES, IMG_MENU["menu_win"])
+IMAGEN_INTRO = os.path.join(CARPETA_IMAGENES, IMG_MENU["titulo_intro"])
 FONDO_MENU_PRINCIPAL = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo"])
 FONDO_GAME_OVER = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo_game_over"])
+FONDO_INTRO = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo_intro"])
 
 
 
