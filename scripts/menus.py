@@ -22,8 +22,8 @@ def stop_creditos(pantalla, clock):
 
 
 def creditos(pantalla, clock):
-	pg.mixer.music.load(MUSICA_GAME_OVER)
-	pg.mixer.music.play(loops=-1)
+	#pg.mixer.music.load(MUSICA_GAME_OVER)
+	#pg.mixer.music.play(loops=-1)
 	fuente = pg.font.Font('freesansbold.ttf', 28)
 	fuente.set_bold(True)
 	
@@ -170,8 +170,8 @@ def fade(pantalla):
 def menu_principal(pantalla, clock):
 	menu = True
 	pg.mixer.music.load(MUSICA_MENU_PRINCIPAL)
+	pg.mixer.music.play(loops=-1)
 	while menu:		
-		pg.mixer.music.play(loops=-1)
 		fuente = pg.font.Font('freesansbold.ttf', 24)
 		fuente.set_bold(True)
 		
@@ -211,16 +211,20 @@ def menu_principal(pantalla, clock):
 			for evento in pg.event.get():
 				if evento.type == pg.QUIT:			
 					run = False
+					menu = False
+					esperar = False
 					dificultad = "0"
 				if evento.type == pg.KEYUP:
 					if evento.key == pg.K_ESCAPE:					
 						run = False
+						menu = False
+						esperar = False
 						dificultad = "0"
 					elif evento.key == pg.K_j:					
 						run = True
 						dificultad = menu_dificultad(pantalla, clock)
-						esperar = False
-						menu = False				
+						menu = False
+						esperar = False			
 					elif evento.key == pg.K_c:
 						creditos(pantalla, clock)
 						esperar = False
