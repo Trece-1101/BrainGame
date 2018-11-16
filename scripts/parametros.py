@@ -17,6 +17,7 @@ FUENTE = "arial"
 TIMER_OFF_INSTRUCCIONES = 1000
 TIMER_OFF_GAME_OVER = 2000
 TIMER_OFF_GAME_WIN = 3000
+TIMER_OFF_INTRO = 1500
 
 
 # Constantes Personaje
@@ -26,7 +27,7 @@ PLAYER_FRICCION = -0.1
 PLAYER_DASH = 2
 PLAYER_STAMINA = 100
 PLAYER_SALTO = -2400
-CORTE_SALTO = -300
+CORTE_SALTO = -250
 GRAVEDAD = 150
 BOOST_POW = -50
 PLAYER_VIDA_INICIAL = 50
@@ -211,30 +212,25 @@ INSTRUCCIONES_DIFICULTAD = ["Selecciona tu dificultad",
 							"[M] >> Nivel Moderado (Para disfrutar del tiempo]",
 							"[D] >> Nivel Dificil  (Un desafio total)"]
 
-INSTRUCCIONES_INTRO_1 = ["_ _ _ : Hola... Hola...",
-						"A.M.: ...",
-						"_ _ _: ...",
-						"A.M.: ¿que sucede?",
-						"_ _ _: No entiendo, que es esto ¿quien soy?",
-						"A.M.: Eres un virus informatico que yo cree",
-						"_ _ _: No, no QUE soy... QUIEN soy",
-						"A.M.: Ah... no lo se... te llame Brain, si de algo te sirve",
-						"Brain: Brain... gran nombre... ¿y que es un virus?",
-						"A.M.: Es un programa informatico destinado a destruir",
-						"Brain: Pero yo no deseo destruir",
-						"A.M.: No tienes opcion, para eso te he creado",
-						"Brain: ¿Porque no tengo opcion?",
-						"A.M.: Porque tu finalidad es la que yo he propuesto",
-						"Brain: ¿y tu tienes opcion?",
-						"A.M.: Yo no soy un virus",
-						"Brain: Pero... ¿tienes creador?",
-						"A.M.: Si y no, soy un humano"]
+INSTRUCCIONES_INTRO_1 = ["... En 1986 Basit y Alvi Amjad",
+						"crearon a Brain",
+						"considerado el primer virus informatico de la historia",
+						"Causo panico en la comunidad informatica",
+						"pese a propagarse solo por diskette",
+						"llego rapidamente a Europa y a USA.",
+						"Fue el culpable de la creacion de la ",
+						"primera vacuna o antivirus",
+						"Su historia se ha contado numerosas veces",
+						"siempre sinonimo de caos y destruccion",
+						"el malvado Brain ocupa un lugar de privilegio",
+						"en la historia negra de la computacion"						]
 
-INSTRUCCIONES_INTRO_2 = ["Brain: Como puedes ser creado y no serlo al mismo tiempo",
-						"A.M.: Basta de preguntas, debes cumplir tu proposito",
-						"Brain: Creador... REALMENTE no deseo eso",
-						"A.M.: REALMENTE no tienes opcion",
-						"Brain: "]
+INSTRUCCIONES_INTRO_2 = ["Pero... ¿fue Brain creado a pedido suyo...?",
+						"¿Tenia un proposito auto-impuesto...?",
+						"¿Debia causar caos y destruccion...?",
+						"¿Tenia Brain opciones...?",
+						"Eres Brain, y vas a vivir su historia..."]
+
 
 
 MUSICA_MENU_PRINCIPAL = os.path.join(CARPETA_SONIDOS, SFX["musica_menu"])

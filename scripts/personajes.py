@@ -40,7 +40,7 @@ def colision_plataforma(sprite, grupo, dir):
 					# mi posicion de y (mi cabeza) tiene que ser el fondo de la plataforma
 					sprite.pos.y = colision[0].rect.bottom
 				# si el sprite que colisiona es el del jugador volvemos su atributo saltando a False
-				if isinstance(sprite, PlayerOne):
+				if sprite.type == "player":
 					sprite.saltando = False
 				sprite.vel.y = 0
 				sprite.rect.y = sprite.pos.y
@@ -167,7 +167,6 @@ class PlayerOne(pg.sprite.Sprite):
 		self.mascara_col = pg.mask.from_surface(self.image)	
 
 
-
 	def saltar(self):
 		# como el sprite del jugador no esta en colision real con el de la plataforma (estan separados
 		# por un pixel) rapidamente bajamos dos pixeles para hacerla colision y los volvemos a subir
@@ -175,7 +174,7 @@ class PlayerOne(pg.sprite.Sprite):
 		colision = pg.sprite.spritecollide(self, self.game.plataformas, False)
 		self.rect.y -= 2
 		if colision and not self.saltando:
-			# si esta en colison y todavia no esta saltando, comenzamos el salto
+			# si esta en colison y todavia no esta saltando, comenzamos el salto			
 			self.saltando = True
 			self.vel.y = PLAYER_SALTO
 
@@ -189,11 +188,12 @@ class PlayerOne(pg.sprite.Sprite):
 				self.vel.y = CORTE_SALTO
 
 		# descomentar para entender
-		# print(self.vel.y)
+		#print(self.vel.y)
 
 	def pad_salto(self):
 		# si toco un pad de salto uso la velocidad de mi propio salto por un plus
 		self.vel.y = PLAYER_SALTO * BOOST_PAD_SALTO
+		self.saltando = True
 
 
 	def fisica_aceleracion(self):

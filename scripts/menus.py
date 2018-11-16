@@ -243,18 +243,20 @@ def intro(pantalla, clock, instrucciones):
 		print("inicio_timer", inicio_timer)
 		inst = fuente.render(instrucciones[i], 1, BLANCO)
 		instRect = inst.get_rect()
-		titulo_top += 2 # 10 pixeles entre linea y linea
+		titulo_top += 10 # 10 pixeles entre linea y linea
 		instRect.top = titulo_top + 10
 		instRect.centerx = MITAD_ANCHO
 		titulo_top += instRect.height
 		while  not timer_off:						
 			fin_timer = pg.time.get_ticks()
 			res = (fin_timer - inicio_timer)
-			if res > TIMER_OFF_INSTRUCCIONES:
+			if res > TIMER_OFF_INTRO:
 				timer_off = True
 		pantalla.blit(inst, instRect)
 		pg.display.flip()
 		timer_off = False
+
+	pg.time.delay(2000)
 
 
 
@@ -332,8 +334,7 @@ def menu_principal(pantalla, clock):
 					elif evento.key == pg.K_i:
 						intro(pantalla, clock, INSTRUCCIONES_INTRO_1)
 						intro(pantalla, clock, INSTRUCCIONES_INTRO_2)
-						intro(pantalla, clock, INSTRUCCIONES_INTRO_3)
-						esperar = false
+						esperar = False
 
 	
 	
@@ -431,6 +432,7 @@ def truco_game_win(pantalla, clock):
 		pantalla.blit(inst, instRect)
 
 	pg.display.flip()
+	pg.time.delay(3)
 
 def menu_game_win(pantalla, clock):
 	pg.mixer.music.load(MUSICA_GAME_OVER)
@@ -481,7 +483,7 @@ def menu_game_win(pantalla, clock):
 	while  not timer_off:						
 		fin_timer = pg.time.get_ticks()
 		res = (fin_timer - inicio_timer)
-		if res > TIMER_OFF_INSTRUCCIONES:
+		if res > TIMER_OFF_GAME_WIN:
 			timer_off = True
 
 	truco_game_win(pantalla, clock)

@@ -126,8 +126,9 @@ class Game():
 
 	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
-		#self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
-		self.mapa = Mapa(carpeta_mapas / "nivel1.txt")
+		self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
+		# descomentar esta linea y comentar la de arriba para elegir un mapa a mano
+		#self.mapa = Mapa(carpeta_mapas / "nivel1.txt")
 		self.mapear()
 
 	def musica_random(self):
@@ -329,7 +330,7 @@ class Game():
 		if colision_portal:
 			for portal in colision_portal:
 				if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
-					if self.c_niveles < 1:
+					if self.c_niveles < 10:
 						self.sonido_portal.play()
 						self.c_niveles += 1
 						self.tiempo_final += TIEMPO_NIVEL
