@@ -278,6 +278,8 @@ class PlayerOne(pg.sprite.Sprite):
 				self.acel.x = -(PLAYER_ACEL * PLAYER_DASH)
 				self.stamina -= 1
 
+		
+
 
 		self.fisica_aceleracion()
 
@@ -314,30 +316,35 @@ class Botaraña(pg.sprite.Sprite):
 
 	def cargar_imagenes(self):
 		self.cuadros_idle = [self.game.spritesheet_araña.get_imagen(132, 396, 64, 64),
-							self.game.spritesheet_araña.get_imagen(132, 330, 64, 64),
 							self.game.spritesheet_araña.get_imagen(132, 264, 64, 64),
+							self.game.spritesheet_araña.get_imagen(132, 330, 64, 64),
 							self.game.spritesheet_araña.get_imagen(132, 198, 64, 64)]
 
 
-		self.cuadros_caminar_d = [self.game.spritesheet_araña.get_imagen(0, 396, 64, 64),
+		self.cuadros_caminar_dd = [self.game.spritesheet_araña.get_imagen(0, 132, 64, 64),
+								self.game.spritesheet_araña.get_imagen(0, 66, 64, 64),
+								self.game.spritesheet_araña.get_imagen(0, 0, 64, 64),
+								self.game.spritesheet_araña.get_imagen(132, 0, 64, 64)]	
+
+		self.cuadros_caminar_i = [self.game.spritesheet_araña.get_imagen(0, 396, 64, 64),
 								self.game.spritesheet_araña.get_imagen(0, 330, 64, 64),
 								self.game.spritesheet_araña.get_imagen(0, 264, 64, 64),
-								self.game.spritesheet_araña.get_imagen(0, 198, 64, 64)]	
+								self.game.spritesheet_araña.get_imagen(0, 198, 64, 64)]
 
-		self.cuadros_caminar_i = [self.game.spritesheet_araña.get_imagen(0, 132, 64, 64),
-								self.game.spritesheet_araña.get_imagen(66, 132, 64, 64),
-								self.game.spritesheet_araña.get_imagen(66, 66, 64, 64),
-								self.game.spritesheet_araña.get_imagen(66, 0, 64, 64)]
+		self.cuadros_correr_d = [self.game.spritesheet_araña.get_imagen(264, 0, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 396, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 330, 64, 64),
+								self.game.spritesheet_araña.get_imagen(198, 264, 64, 64)]
 
-		self.cuadros_correr_d = [self.game.spritesheet_araña.get_imagen(198, 198, 64, 64),
+		self.cuadros_correr_ii = [self.game.spritesheet_araña.get_imagen(198, 198, 64, 64),
 								self.game.spritesheet_araña.get_imagen(198, 132, 64, 64),
 								self.game.spritesheet_araña.get_imagen(198, 66, 64, 64),
 								self.game.spritesheet_araña.get_imagen(198, 0, 64, 64)]
 
-		self.cuadros_correr_ii = [self.game.spritesheet_araña.get_imagen(264, 0, 64, 64),
-								self.game.spritesheet_araña.get_imagen(198, 396, 64, 64),
-								self.game.spritesheet_araña.get_imagen(198, 330, 64, 64),
-								self.game.spritesheet_araña.get_imagen(198, 264, 64, 64)]
+
+		self.cuadros_caminar_d = []
+		for cuadro in self.cuadros_caminar_dd:
+			self.cuadros_caminar_d.append(pg.transform.flip(cuadro, True, False))
 
 		self.cuadros_correr_i = []
 		for cuadro in self.cuadros_correr_ii:

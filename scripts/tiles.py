@@ -34,6 +34,7 @@ class Portal(pg.sprite.Sprite):
 		self.image = self.game.spritesheet.get_imagen(132, 330, 64, 64)	
 		self.image.set_colorkey(NEGRO)
 		self.rect = self.image.get_rect()
+		self.image = pg.transform.scale(self.image, (TAMAÑO_TILE_CARPETA, TAMAÑO_TILE_CARPETA))
 		self.x = x
 		self.y = y
 		self.rect.x = x * TAMAÑO_TILE
@@ -43,10 +44,16 @@ class Portal(pg.sprite.Sprite):
 	def abierto(self):
 		self.image = self.game.spritesheet.get_imagen(132, 396, 64, 64)	
 		self.image.set_colorkey(NEGRO)
+		self.image = pg.transform.scale(self.image, (TAMAÑO_TILE_CARPETA, TAMAÑO_TILE_CARPETA))
+		# mascara de colision
+		self.mascara_col = pg.mask.from_surface(self.image)
 
 	def cerrado(self):
 		self.image = self.game.spritesheet.get_imagen(132, 330, 64, 64)	
 		self.image.set_colorkey(NEGRO)
+		self.image = pg.transform.scale(self.image, (TAMAÑO_TILE_CARPETA, TAMAÑO_TILE_CARPETA))
+		# mascara de colision
+		self.mascara_col = pg.mask.from_surface(self.image)
 
 	def update(self):
 		dist_obj = self.pos - self.game.player.pos

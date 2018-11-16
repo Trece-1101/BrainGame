@@ -11,8 +11,6 @@ from scripts.camara import *
 from scripts.item import *
 from scripts.menus import *
 from scripts.controles import *
-from scripts.fondos import *
-from scripts.gui import *
 
 # GUI
 def gui(pantalla, x, y, pct, color_lleno, color_medio, color_vacio, texto):
@@ -53,11 +51,13 @@ class Game():
 		self.jugando = True # bool para determinar el game_over o no	
 		self.fuente = pg.font.match_font(FUENTE)
 		self.cargar_datos()
+		pg.display.set_icon(self.icono)
 		self.pausado = False
 		self.tiempo_inicio = pg.time.get_ticks()
 		self.tiempo_final = TIEMPO_NIVEL * iniciar[1]
 		self.control_tiempo = 0		
 		self.c_niveles = 1
+		
 		
 
 	def cargar_datos(self):
@@ -67,7 +67,8 @@ class Game():
 		# spritesheet_completo			
 		self.spritesheet = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET))
 		self.spritesheet_araña = Spritesheet(os.path.join(CARPETA_IMAGENES, SPRITESHEET_ARAÑA))
-
+		img_icono = os.path.join(CARPETA_IMAGENES, "titulo.png")
+		self.icono = pg.image.load(img_icono)
 
 		# sonidos
 		self.carpeta_sonidos = Path("sfx")
@@ -78,7 +79,8 @@ class Game():
 		self.sonido_muerteNPC = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["lastimados_npc"]))
 		self.sonido_portal = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["portal"]))
 		# tiempo
-		self.sonido_tiempo_limite = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempo_limite"]))		
+		self.sonido_tiempo_limite = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["tiempo_limite"]))
+		self.sonido_tiempo_limite.set_volume(0.3)		
 		# items
 		self.sonido_salto_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["salto_boost"]))
 		self.sonido_boost = pg.mixer.Sound(os.path.join(self.carpeta_sonidos, SFX["boost"]))
@@ -95,34 +97,34 @@ class Game():
 		self.sec_niveles = []
 		x = 0
 		while x < 3:
-			nivel = random.randint(INI_FACIL, FIN_FACIL + 1)
+			nivel = random.randint(INI_FACIL, FIN_FACIL)
 			if nivel not in self.sec_niveles:
 				self.sec_niveles.append(nivel)	
 				x += 1
 		x = 0		
 
 		while x < 3:
-			nivel = random.randint(INI_MEDIO, FIN_MEDIO + 1)
+			nivel = random.randint(INI_MEDIO, FIN_MEDIO)
 			if nivel not in self.sec_niveles:
 				self.sec_niveles.append(nivel)	
 				x += 1
 		x = 0	
 
 		while x < 3:
-			nivel = random.randint(INI_DIFICIL, FIN_DIFICIL + 1)
+			nivel = random.randint(INI_DIFICIL, FIN_DIFICIL)
 			if nivel not in self.sec_niveles:
 				self.sec_niveles.append(nivel)	
 				x += 1
 
-		nivel = random.randint(INI_FINAL, FIN_FINAL + 1)
+		nivel = random.randint(INI_FINAL, FIN_FINAL)
 		self.sec_niveles.append(nivel)
 		#print(self.sec_niveles)
 				
 
 	def cargar_nivel(self, nivel):
 		carpeta_mapas = Path("mapas")
-		self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
-		#self.mapa = Mapa(carpeta_mapas / "nivel16.txt")
+		#self.mapa = Mapa(carpeta_mapas / "nivel{}.txt".format(nivel))
+		self.mapa = Mapa(carpeta_mapas / "nivel1.txt")
 		self.mapear()
 
 	def musica_random(self):
@@ -151,7 +153,23 @@ class Game():
 			if evento.type == pg.KEYUP:
 				if evento.key == pg.K_SPACE:
 					self.player.control_salto()
-			
+
+			if evento.type == pg.JOYBUTTONDOWN:
+				if evento.button == START:
+					self.pausado = not self.pausado
+				elif evento.button == BACK:
+					sys.exit(0)
+                elif evento.button == BOTON_A:
+                    self.sonido_salto.play()
+					self.player.saltar()
+                elif evento.button == BOTON_X:
+                    self.sonido_boost.play()
+
+            if evento.type == pg.JOYBUTTONUP:
+            	if evento.button == BOTON_X:
+            		self.player.control_salto()
+
+		
 
 	def dibujar_grilla(self):
 		for x in range(0, ANCHO, TAMAÑO_TILE):
@@ -163,12 +181,17 @@ class Game():
 
 	def dibujar(self):
 		# metodo que maneja el dibujo en pantalla de todas las cosas
-		pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
 
 
+		# descomentar para ver los FPS en la barra de titulo
+		#pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
+
+
+		# mostramos en pantalla el fondo
 		self.pantalla.blit(self.img_fondo, self.img_fondo_rect)
 		
 
+		# control de porcentajes para pasar a la gui
 		pct_scan = self.control_tiempo / self.tiempo_final
 		if pct_scan > 0.9:
 			self.sonido_tiempo_limite.play()
@@ -218,6 +241,7 @@ class Game():
 					Portal(self, col, fila)
 				elif tile == "P":
 					if colPlayer == 0 and filaPlayer == 0:
+						#PlataformaCentro(self, col, fila + 1)
 						self.player = PlayerOne(self, col, fila) # inicializo al player la primera vez
 					else:
 						self.player = PlayerOne(self, colPlayer, filaPlayer) # inicializo al player en el rewspawn
@@ -299,18 +323,18 @@ class Game():
 
 
 		# colision con el portal para pasar de nivel
-		colision_portal = pg.sprite.spritecollide(self.player, self.portales, False)
+		colision_portal = pg.sprite.spritecollide(self.player, self.portales, False, pg.sprite.collide_mask)
 		if colision_portal:
 			for portal in colision_portal:
 				if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
-					if self.c_niveles < 10:
+					if self.c_niveles < 1:
 						self.sonido_portal.play()
 						self.c_niveles += 1
 						self.tiempo_final += TIEMPO_NIVEL
 						self.sec_niveles.pop(0)				
 						self.nuevo_juego()
 					else:
-						print("ganaste")
+						menu_game_win(self.pantalla, self.FPSclock)
 						self.quit()
 
 

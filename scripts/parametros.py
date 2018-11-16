@@ -14,6 +14,9 @@ FPS = 60
 ACTUALIZACION_CUADROS = 300
 ACTUALIZACION_CUADROS_ENEMIGOS = 400
 FUENTE = "arial"
+TIMER_OFF_INSTRUCCIONES = 1000
+TIMER_OFF_GAME_OVER = 2000
+TIMER_OFF_GAME_WIN = 3000
 
 
 # Constantes Personaje
@@ -66,6 +69,7 @@ CELESTE = (0, 155, 155)
 # Tiles
 TAMAÑO_TILE = 32
 TAMAÑO_TILE_ITEM = int(TAMAÑO_TILE * 1.25)
+TAMAÑO_TILE_CARPETA = int(TAMAÑO_TILE * 2)
 TAMAÑO_TILE_ENEMIGO = int(TAMAÑO_TILE * 2)
 TAMAÑO_TILE_BOTARAÑA = int(TAMAÑO_TILE * 1.5)
 ANCHO_GRILLA = ANCHO / TAMAÑO_TILE # 1024 = 32 ancho;  1440 = 45 ancho
@@ -116,7 +120,8 @@ FONDO = ["fondo1.png",
 		"fondo7.png",
 		"fondo8.png"]
 
-IMG_MENU = {"titulo": "titulo.png", 
+IMG_MENU = {"icono":"icono.png",
+			"titulo": "titulo.png", 
 			"fondo": "brain_home.png",
 			"titulo_game_over": "",
 			"fondo_game_over": "game_over.png"}
@@ -150,24 +155,44 @@ SFX = {"musica_menu": "DarkIntro.ogg",
 		"lastimados_npc": "lastimados_NPC.wav",
 		"salto": "salto.wav",
 		"salto_boost": "salto_boost.wav",
-		"tiempo_limite": "tiempolimite.wav",
+		"tiempo_limite": "tiempolimite.ogg",
 		"portal": "portal.wav"}
 
 # Menus
 
-INSTRUCCIONES_MENU_PRINCIPAL = ["Controles",
-								"Flechas para moverse (<- ->)", 
-								"[ESPACIO] para saltar",
-								"[SHIFT] para acelerar (dash)",
-								"[P] para pausar",
-								"[ESC] para salir",
+INSTRUCCIONES_MENU_PRINCIPAL = ["[J] >> Jugar",
 								"----------------------------",
-					   			"[J] >> Jugar",
-					   			"[C] >> Creditos",]
+					   			"[T] >> Controles",
+					   			"[C] >> Creditos",
+					   			"[ESC] >> Salir"]
+
+
+INSTRUCCIONES_CONTROLES = ["Controles",
+						"Flechas >> Moverse (<- ->)", 
+						"[ESPACIO] >> Saltar",
+						"[SHIFT] >> Acelerar (dash)",
+						"[P] >> Pausar",
+						"[ESC] >> Salir",
+						"----------------------------",
+					   	"[M] >> Regresar al menu"]
+
+
 INSTRUCCIONES_GAME_OVER = ["'Todo lo que vive esta destinado a morir'",
 							"Brain no pudo escapar de su prision impuesta",
 							"Gracias por jugar y ayudar a la destruccion del villano",
-							"[ESC] >> Salir a pensar si jugar es lo tuyo"]
+							"[ESC] >> Salir a replantearse las cosas"]
+
+
+INSTRUCCIONES_GAME_WIN = ["'El 011010000110111101101101011000100111001001100101",
+							"es libre en el momento en que desea serlo'",
+							"Brain pudo escapar de su prision impuesta",
+							"Gracias por jugar y ayudar al villano"]
+
+INSTRUCCIONES_GAME_WIN2 = ["'El hombre",
+							"es libre en el momento en que desea serlo'",
+							"Brain pudo escapar de su prision impuesta",
+							"Gracias por jugar y ayudar al villano",
+							"[ESC] >> Salir a replantearse las cosas"]
 
 INSTRUCCIONES_CREDITOS = ["Creadores (orden alfabetico):",
 							"Bazzi, Omar",
@@ -187,3 +212,16 @@ MUSICA_GAME_OVER = os.path.join(CARPETA_SONIDOS, SFX["musica_creditos"])
 IMAGEN_MENU_PRINCIPAL = os.path.join(CARPETA_IMAGENES, IMG_MENU["titulo"])
 FONDO_MENU_PRINCIPAL = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo"])
 FONDO_GAME_OVER = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo_game_over"])
+
+
+
+# botones controles
+BOTON_A = 0
+BOTON_X = 2
+BACK = 6
+START = 7
+
+LEFT_STICK_X = 0
+LEFT_STICK_Y = 1
+RIGHT_STICK_X = 4
+RIGHT_STICK_Y = 3
