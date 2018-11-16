@@ -319,7 +319,7 @@ class Game():
 
 		# si caemos al vacio respawneamos
 		if self.player.pos.y > 1900:
-			#print("caida")
+			print("caida")
 			self.respawn_stamina = self.player.stamina
 			self.respawn()
 

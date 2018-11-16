@@ -166,7 +166,6 @@ class PlayerOne(pg.sprite.Sprite):
 		# mascara de colision para poder hacer colisiones pixel perfect
 		self.mascara_col = pg.mask.from_surface(self.image)	
 
-
 	def saltar(self):
 		# como el sprite del jugador no esta en colision real con el de la plataforma (estan separados
 		# por un pixel) rapidamente bajamos dos pixeles para hacerla colision y los volvemos a subir
@@ -241,6 +240,8 @@ class PlayerOne(pg.sprite.Sprite):
 	
 
 	def update(self):
+		print("pos.y {0}".format(self.pos.y))
+		print("vel.y {0}".format(self.vel.y))
 		self.animar()		
 		self.acel = vec2(0, GRAVEDAD)
 
@@ -248,6 +249,9 @@ class PlayerOne(pg.sprite.Sprite):
 		# (quiere decir que esta en el piso) y tomar su pos en x (restandole un par de casilleros dependiendo
 		# el sentido del jugador asi evitamos los bordes) y diviendolo por el tamaño del tile para transformarlo
 		# en filas y columnas y poder pasarlo al mapeador
+
+		if self.vel.y > 1100:
+			self.vel.y = 1100
 
 		if self.vel.y == 0:
 			if self.sentido == "D":
