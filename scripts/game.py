@@ -188,7 +188,7 @@ class Game():
 
 
 		# descomentar para ver los FPS en la barra de titulo
-		#pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
+		pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
 
 
 		# mostramos en pantalla el fondo
@@ -330,7 +330,7 @@ class Game():
 		if colision_portal:
 			for portal in colision_portal:
 				if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
-					if self.c_niveles < 10:
+					if self.c_niveles < 1:
 						self.sonido_portal.play()
 						self.c_niveles += 1
 						self.tiempo_final += TIEMPO_NIVEL
