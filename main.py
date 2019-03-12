@@ -1,4 +1,5 @@
 '''Todos los creditos de la musica pertenecen a Juhani Junkala -- juhani.junkala@musician.org'''
+# Codeado Por Omar
 
 # main para ejecutar el juego
 from scripts.game import *
