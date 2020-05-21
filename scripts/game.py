@@ -142,6 +142,7 @@ class Game():
         pg.mixer.music.load(os.path.join(
             self.carpeta_sonidos, random.choice(SFX["musica"])))
         pg.mixer.music.play(loops=-1)
+        pg.mixer.music.set_volume(0.4)
 
     def quit(self):
         sys.exit()
@@ -295,6 +296,7 @@ class Game():
         self.img_fondo_rect = self.img_fondo.get_rect()
 
         # instanciar el mapa
+        # carga el primer nivel que este en la lista que se armo aleatoriamente
         self.cargar_nivel(self.sec_niveles[0])
 
         # instanciamos la camara con los valores del mapa que salen en la carga de datos
@@ -370,6 +372,7 @@ class Game():
                 av.morir()
 
         # colision con los distintos items
+        # se podria hacer un metodo por fuera para no dejar tan messy el update
         colision_item = pg.sprite.spritecollide(self.player, self.items, True)
         for item in colision_item:
             if item.type == "acelerar":
