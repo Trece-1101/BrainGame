@@ -142,7 +142,7 @@ class Game():
         pg.mixer.music.load(os.path.join(
             self.carpeta_sonidos, random.choice(SFX["musica"])))
         pg.mixer.music.play(loops=-1)
-        pg.mixer.music.set_volume(0.4)
+        pg.mixer.music.set_volume(0.25)
 
     def quit(self):
         sys.exit()
