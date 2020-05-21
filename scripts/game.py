@@ -67,6 +67,15 @@ class Game():
             self.j = pg.joystick.Joystick(0)
             self.j.init()
 
+    def crear_nivel(self, inicio, fin):
+        nivel = 0
+        x = 0
+        while x < 3:
+            nivel = random.randint(inicio, fin)
+            if nivel not in self.sec_niveles:
+                self.sec_niveles.append(nivel)
+                x += 1
+
     def cargar_datos(self):
         # metodo para cargar datos desde archivos
         # imagenes
@@ -113,30 +122,14 @@ class Game():
 
         self.sec_niveles = []
 
-        x = 0
-        while x < 3:
-            nivel = random.randint(INI_FACIL, FIN_FACIL)
-            if nivel not in self.sec_niveles:
-                self.sec_niveles.append(nivel)
-                x += 1
-        x = 0
-
-        while x < 3:
-            nivel = random.randint(INI_MEDIO, FIN_MEDIO)
-            if nivel not in self.sec_niveles:
-                self.sec_niveles.append(nivel)
-                x += 1
-        x = 0
-
-        while x < 3:
-            nivel = random.randint(INI_DIFICIL, FIN_DIFICIL)
-            if nivel not in self.sec_niveles:
-                self.sec_niveles.append(nivel)
-                x += 1
-
+        self.crear_nivel(INI_FACIL, FIN_FACIL)
+        self.crear_nivel(INI_MEDIO, FIN_MEDIO)
+        self.crear_nivel(INI_DIFICIL, FIN_DIFICIL)
         nivel = random.randint(INI_FINAL, FIN_FINAL)
         self.sec_niveles.append(nivel)
-        print(self.sec_niveles)
+
+        # Descomentar para ver como quedo el conjunto de 10 niveles aleatorio
+        # print(self.sec_niveles)
 
     def cargar_nivel(self, nivel):
         carpeta_mapas = Path("mapas")
