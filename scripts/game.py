@@ -148,6 +148,7 @@ class Game():
 
     def eventos(self):
         # metodo que maneja inputs de teclado menos los keypress, todo lo relacionado al KUP y KDOW queda aca
+        # son "IF" y no "ELIF" cuando se permite doble input
         for evento in pg.event.get():
             if evento.type == pg.QUIT:
                 self.quit()
@@ -191,12 +192,13 @@ class Game():
         # metodo que maneja el dibujo en pantalla de todas las cosas
 
         # descomentar para ver los FPS en la barra de titulo
-        pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
+        # pg.display.set_caption("{:.2f}".format(self.FPSclock.get_fps()))
 
         # mostramos en pantalla el fondo
         self.pantalla.blit(self.img_fondo, self.img_fondo_rect)
 
         # control de porcentajes para pasar a la gui
+        # este valor se usa para rellenar la barra de color
         pct_scan = self.control_tiempo / self.tiempo_final
         if pct_scan > 0.9:
             self.sonido_tiempo_limite.play()
@@ -226,6 +228,7 @@ class Game():
     def mapear(self, colPlayer=0, filaPlayer=0):
         # metodo para tomar un .txt y convertirlo en mapa
         # cargo y creo el mapa
+        # cada valor de tile tiene asignado un sprite
         for fila, tiles in enumerate(self.mapa.data_mapa):
             for col, tile in enumerate(tiles):
                 if tile == "1":
@@ -325,7 +328,10 @@ class Game():
             self.player, self.portales, False, pg.sprite.collide_mask)
         if colision_portal:
             for portal in colision_portal:
+                # 20 es el margen desde el centro para que el portal detecte al player
                 if abs(self.player.rect.centerx - portal.rect.centerx) < 20:
+                    # Mientras no hayamos recorridos los 10 niveles el juego sigue
+                    # se hace un pop a la lista de niveles original
                     if self.c_niveles < 10:
                         self.sonido_portal.play()
                         self.c_niveles += 1
@@ -340,21 +346,19 @@ class Game():
         colision_enemigo_bot = pg.sprite.spritecollide(
             self.player, self.bots, False, pg.sprite.collide_mask)
         for enemigo in colision_enemigo_bot:
-            if enemigo.type == "BotAraña":
-                if enemigo.vivo:
-                    self.sonido_lastimado.play()
-                    enemigo.morir()
-                    self.tiempo_final -= DANIO_BOT
+            if enemigo.type == "BotAraña" and enemigo.vivo:
+                self.sonido_lastimado.play()
+                enemigo.morir()
+                self.tiempo_final -= DANIO_BOT
 
         # colision con el antivirus, segundos
         colision_enemigo_av = pg.sprite.spritecollide(
             self.player, self.antivirus, False, pg.sprite.collide_mask)
         for enemigo in colision_enemigo_av:
-            if enemigo.type == "Antivirus":
-                if enemigo.vivo:
-                    self.sonido_lastimado.play()
-                    enemigo.morir()
-                    self.tiempo_final -= DANIO_AV
+            if enemigo.type == "Antivirus" and enemigo.vivo:
+                self.sonido_lastimado.play()
+                enemigo.morir()
+                self.tiempo_final -= DANIO_AV
 
         # colision entre el anvivirus y la botaraña, muere el antivirus
         for av in self.antivirus:

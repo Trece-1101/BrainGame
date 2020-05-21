@@ -14,21 +14,21 @@ def colision_plataforma(sprite, grupo, dir):
     if dir == "x":
         colision = pg.sprite.spritecollide(sprite, grupo, False)
         if colision:
-            if sprite.vel.x > 0:
+            if sprite.vel.x >= 0:
                 # colision en el sentido x moviendose de izq a derecha
                 # mi posicion de x tiene que ser la izq de la plataforma menos el ancho
                 # de mi rectangulo de colision
                 sprite.pos.x = colision[0].rect.left - sprite.rect.width
-            if sprite.vel.x < 0:
+            else:
                 # colision en el sentido x moviendose de derecha a izquierda
                 # mi posicion de x tiene que ser la derecha de la plataforma
                 sprite.pos.x = colision[0].rect.right
             sprite.vel.x = 0
             sprite.rect.x = sprite.pos.x
-    if dir == "y":
+    elif dir == "y":
         colision = pg.sprite.spritecollide(sprite, grupo, False)
         if colision:
-            if sprite.vel.y > 0:
+            if sprite.vel.y >= 0:
                 # colision en el sentido y moviendose de arriba para abajo (cayendo y+)
                 # mi posicion y (mi cabeza) tiene que ser el techa de la plataforma menos mi
                 # altura (= mis pies)
@@ -36,7 +36,7 @@ def colision_plataforma(sprite, grupo, dir):
                 for plataforma in colision:
                     if plataforma.type == "trampa" and sprite.type == "player":
                         plataforma.pisada = True
-            if sprite.vel.y < 0:
+            else:
                 # colision en el sentido y moviendose de abajo para arriba (saltando y-)
                 # mi posicion de y (mi cabeza) tiene que ser el fondo de la plataforma
                 sprite.pos.y = colision[0].rect.bottom
@@ -49,28 +49,58 @@ def colision_plataforma(sprite, grupo, dir):
     #print("direccion {0} -- colision {1} -- sprite {2} -- grupo {3}".format(dir, colision, sprite, grupo))
 
 
-class PlayerOne(pg.sprite.Sprite):
-    """docstring for PlayerOne"""
-
+class Personaje(pg.sprite.Sprite):
     def __init__(self, game, x, y):
-        self.groups = game.sprites
-        self._layer = PLAYER_LAYER
-        super(PlayerOne, self).__init__(self.groups)
+        super(Personaje, self).__init__(self.groups)
         self.game = game
         self.cuadro_actual = 0
         self.ultimo_update = 0
         self.cargar_imagenes()
         self.image = self.cuadros_idle[0]
         self.rect = self.image.get_rect()
+        self.type = ""
         self.vel = vec2(0, 0)
         self.acel = vec2(0, 0)
-        self.pos = vec2(x * TAMAÑO_TILE, y * TAMAÑO_TILE)
+        self.pos = vec2(0, 0)
+
+    def quitar_fondo_negro(self, cuadros):
+        for cuadro in cuadros:
+            cuadro.set_colorkey(NEGRO)
+
+    def cargar_imagenes(self):
+        pass
+
+    def animar(self):
+        pass
+
+    def update(self):
+        pass
+
+    def morir(self):
+        # cuando se muere lo dejamos quieto y cambiamos su cuadro
+        self.vel.x = 0
+        self.vivo = False
+        self.animar()
+
+
+class PlayerOne(Personaje):
+    """docstring for PlayerOne"""
+
+    def __init__(self, game, x, y):
+        self.groups = game.sprites
+        self._layer = PLAYER_LAYER
         self.saltando = False
         self.sentido = "D"
         self.stamina = PLAYER_STAMINA
-        self.type = "player"
         self.col = 0
         self.fila = 0
+
+        Personaje.__init__(self, game, x, y)
+        self.type = "player"
+        self.pos = vec2(x * TAMAÑO_TILE, y * TAMAÑO_TILE)
+
+    def morir(self):
+        pass
 
     def cargar_imagenes(self):
         # usamos de imagenes el spritesheet cargado al iniciar el juego junto con el metodo
@@ -111,24 +141,13 @@ class PlayerOne(pg.sprite.Sprite):
         self.cuadro_morir = self.game.spritesheet.get_imagen(66, 0, 64, 64)
 
         # quitar el fondo negro
-        for cuadro in self.cuadros_idle:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_caminar_d:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_caminar_i:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_correr_d:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_correr_i:
-            cuadro.set_colorkey(NEGRO)
-
+        self.quitar_fondo_negro(self.cuadros_idle)
+        self.quitar_fondo_negro(self.cuadros_caminar_d)
+        self.quitar_fondo_negro(self.cuadros_caminar_i)
+        self.quitar_fondo_negro(self.cuadros_correr_d)
+        self.quitar_fondo_negro(self.cuadros_correr_i)
         self.cuadro_saltar_d.set_colorkey(NEGRO)
         self.cuadro_saltar_i.set_colorkey(NEGRO)
-
         self.cuadro_morir.set_colorkey(NEGRO)
 
     def animar(self):
@@ -300,27 +319,20 @@ class PlayerOne(pg.sprite.Sprite):
         self.fisica_aceleracion()
 
 
-
-class Botaraña(pg.sprite.Sprite):
+class Botaraña(Personaje):
     """docstring for Enemigo"""
 
     def __init__(self, game, x, y):
         self.groups = game.sprites, game.bots
         self.layer = ENEMIGO_LAYER
-        super(Botaraña, self).__init__(self.groups)
-        self.game = game
-        self.cuadro_actual = 0
-        self.ultimo_update = 0
+
+        Personaje.__init__(self, game, x, y)
         self.type = items["B"]
+        self.pos = vec2(x, y) * TAMAÑO_TILE
+
         self.cargar_imagenes()
         self.image = self.cuadros_idle[0]
         self.transformar(self.image)
-        self.rect = self.image.get_rect()
-        self.vel = vec2(0, 0)
-        self.acel = vec2(0, 0)
-        self.pos = vec2(x, y) * TAMAÑO_TILE
-        self.rect.center = self.pos
-        self.acel = vec2(0, 0)
         self.vivo = True
         self.idle = True
 
@@ -380,20 +392,11 @@ class Botaraña(pg.sprite.Sprite):
             132, 66, 64, 64)
 
         # quitar el fondo negro
-        for cuadro in self.cuadros_idle:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_caminar_d:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_caminar_i:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_correr_d:
-            cuadro.set_colorkey(NEGRO)
-        for cuadro in self.cuadros_correr_i:
-            cuadro.set_colorkey(NEGRO)
-
+        self.quitar_fondo_negro(self.cuadros_idle)
+        self.quitar_fondo_negro(self.cuadros_caminar_d)
+        self.quitar_fondo_negro(self.cuadros_caminar_i)
+        self.quitar_fondo_negro(self.cuadros_correr_d)
+        self.quitar_fondo_negro(self.cuadros_correr_i)
         self.cuadro_muerte.set_colorkey(NEGRO)
 
     def animar(self):
@@ -436,11 +439,11 @@ class Botaraña(pg.sprite.Sprite):
         # mascara de colision
         self.mascara_col = pg.mask.from_surface(self.image)
 
-    def morir(self):
-        # cuando se muere lo dejamos quieto y cambiamos su cuadro
-        self.vel.x = 0
-        self.vivo = False
-        self.animar()
+    # def morir(self):
+    #     # cuando se muere lo dejamos quieto y cambiamos su cuadro
+    #     self.vel.x = 0
+    #     self.vivo = False
+    #     self.animar()
 
     def update(self):
         self.animar()
@@ -483,17 +486,16 @@ class Botaraña(pg.sprite.Sprite):
             self.idle = True
 
 
-class Antivirus(pg.sprite.Sprite):
+class Antivirus(Personaje):
     """docstring for Enemigo"""
 
     def __init__(self, game, x, y):
         self.groups = game.sprites, game.antivirus
         self.layer = ENEMIGO_LAYER
-        super(Antivirus, self).__init__(self.groups)
-        self.game = game
-        self.cuadro_actual = 0
-        self.ultimo_update = 0
+
+        Personaje.__init__(self, game, x, y)
         self.type = items["AV"]
+
         self.cargar_imagenes()
         self.image = self.cuadros_idle[0]
         self.transformar(self.image)
@@ -532,21 +534,15 @@ class Antivirus(pg.sprite.Sprite):
                 pg.transform.flip(cuadro, True, False))
 
         # quitar el fondo negro
-        for cuadro in self.cuadros_correr_d:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_correr_i:
-            cuadro.set_colorkey(NEGRO)
-
-        for cuadro in self.cuadros_idle:
-            cuadro.set_colorkey(NEGRO)
-
+        self.quitar_fondo_negro(self.cuadros_idle)
+        self.quitar_fondo_negro(self.cuadros_correr_d)
+        self.quitar_fondo_negro(self.cuadros_correr_i)
         self.cuadro_muerto.set_colorkey(NEGRO)
 
-    def morir(self):
-        self.vx = 0
-        self.vivo = False
-        self.animar()
+    # def morir(self):
+    #     self.vx = 0
+    #     self.vivo = False
+    #     self.animar()
 
     def animar(self):
         este_instante = pg.time.get_ticks()

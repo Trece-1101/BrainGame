@@ -23,10 +23,10 @@ TIMER_OFF_INTRO = 1500
 # Constantes Personaje
 vec2 = pg.math.Vector2  # vector2 para movimiento y posicion
 PLAYER_ACEL = 100  # 120 px por segundo
-PLAYER_FRICCION = -0.1
+PLAYER_FRICCION = -0.12
 PLAYER_DASH = 2
 PLAYER_STAMINA = 100
-PLAYER_SALTO = -2100
+PLAYER_SALTO = -2300
 CORTE_SALTO = -250
 GRAVEDAD = 150
 BOOST_POW = -50
