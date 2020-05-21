@@ -84,8 +84,6 @@ class Personaje(pg.sprite.Sprite):
 
 
 class PlayerOne(Personaje):
-    """docstring for PlayerOne"""
-
     def __init__(self, game, x, y):
         self.groups = game.sprites
         self._layer = PLAYER_LAYER
@@ -320,8 +318,6 @@ class PlayerOne(Personaje):
 
 
 class Botaraña(Personaje):
-    """docstring for Enemigo"""
-
     def __init__(self, game, x, y):
         self.groups = game.sprites, game.bots
         self.layer = ENEMIGO_LAYER
@@ -333,8 +329,8 @@ class Botaraña(Personaje):
         self.cargar_imagenes()
         self.image = self.cuadros_idle[0]
         self.transformar(self.image)
-        self.vivo = True
         self.idle = True
+        self.vivo = True
 
     def transformar(self, imagen):
         # para que los personajes sean mas grandes que el player (el doble) escalamos todas las imagenes
@@ -439,11 +435,11 @@ class Botaraña(Personaje):
         # mascara de colision
         self.mascara_col = pg.mask.from_surface(self.image)
 
-    # def morir(self):
-    #     # cuando se muere lo dejamos quieto y cambiamos su cuadro
-    #     self.vel.x = 0
-    #     self.vivo = False
-    #     self.animar()
+    def morir(self):
+        # cuando se muere lo dejamos quieto y cambiamos su cuadro
+        self.vel.x = 0
+        self.vivo = False
+        self.animar()
 
     def update(self):
         self.animar()
@@ -487,8 +483,6 @@ class Botaraña(Personaje):
 
 
 class Antivirus(Personaje):
-    """docstring for Enemigo"""
-
     def __init__(self, game, x, y):
         self.groups = game.sprites, game.antivirus
         self.layer = ENEMIGO_LAYER

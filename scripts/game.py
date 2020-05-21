@@ -229,6 +229,8 @@ class Game():
         # metodo para tomar un .txt y convertirlo en mapa
         # cargo y creo el mapa
         # cada valor de tile tiene asignado un sprite
+        # No es una solucion muy elegante anidar tantos elseif
+        # Otra solucion podria ser metodo con diccionario que devuelva el objeto
         for fila, tiles in enumerate(self.mapa.data_mapa):
             for col, tile in enumerate(tiles):
                 if tile == "1":
