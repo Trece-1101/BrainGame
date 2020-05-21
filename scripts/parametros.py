@@ -21,12 +21,12 @@ TIMER_OFF_INTRO = 1500
 
 
 # Constantes Personaje
-vec2 = pg.math.Vector2 # vector2 para movimiento y posicion
-PLAYER_ACEL = 100 # 120 px por segundo
-PLAYER_FRICCION = -0.1
+vec2 = pg.math.Vector2  # vector2 para movimiento y posicion
+PLAYER_ACEL = 100  # 120 px por segundo
+PLAYER_FRICCION = -0.12
 PLAYER_DASH = 2
 PLAYER_STAMINA = 100
-PLAYER_SALTO = -2400
+PLAYER_SALTO = -2350
 CORTE_SALTO = -250
 GRAVEDAD = 150
 BOOST_POW = -50
@@ -73,17 +73,18 @@ TAMAÑO_TILE_ITEM = int(TAMAÑO_TILE * 1.25)
 TAMAÑO_TILE_CARPETA = int(TAMAÑO_TILE * 2)
 TAMAÑO_TILE_ENEMIGO = int(TAMAÑO_TILE * 2)
 TAMAÑO_TILE_BOTARAÑA = int(TAMAÑO_TILE * 1.5)
-ANCHO_GRILLA = ANCHO / TAMAÑO_TILE # 1024 = 32 ancho;  1440 = 45 ancho
-ALTO_GRILLA = ALTO / TAMAÑO_TILE # 640 = 20 alto; 896 = 28 alto
+ANCHO_GRILLA = ANCHO / TAMAÑO_TILE  # 1024 = 32 ancho;  1440 = 45 ancho
+ALTO_GRILLA = ALTO / TAMAÑO_TILE  # 640 = 20 alto; 896 = 28 alto
 OFFSETX_CAMARA = 200
+OFFSETY_CAMARA = 120
 
 # Items
-items = {"A": "acelerar", 
-		"S": "saltar", 
-		"C": "combotron",
-		"T": "tiempotron", 
-		"B": "BotAraña",
-		"AV": "Antivirus" }
+items = {"A": "acelerar",
+         "S": "saltar",
+         "C": "combotron",
+         "T": "tiempotron",
+         "B": "BotAraña",
+         "AV": "Antivirus"}
 
 PROB_ACELERADOR = 60
 PROB_PAD_SALTO = 50
@@ -105,132 +106,129 @@ TIEMPO_ANIMACION_MUERTE = 500
 RADIO_DETECCION = [200, 250, 300, 350, 400]
 
 
-
 # imagenes
 CARPETA_IMAGENES = Path("gfx")
 SPRITESHEET = "spritesheet.png"
 SPRITESHEET_ARAÑA = "spritesheet_araña.png"
 
 
-FONDO = ["fondo1.png", 
-		"fondo2.png", 
-		"fondo3.png", 
-		"fondo4.png", 
-		"fondo5.png", 
-		"fondo6.png",
-		"fondo7.png",
-		"fondo8.png"]
+FONDO = ["fondo1.png",
+         "fondo2.png",
+         "fondo3.png",
+         "fondo4.png",
+         "fondo5.png",
+         "fondo6.png",
+         "fondo7.png",
+         "fondo8.png"]
 
-IMG_MENU = {"icono":"icono.png",
-			"titulo": "titulo.png", 
-			"fondo": "brain_home.png",
-			"titulo_game_over": "",
-			"fondo_game_over": "game_over.png",
-			"fondo_intro": "brain_textos.png",
-			"titulo_intro": "titulo_intro.png",
-			"menu_win": "game_win.png"}
-
+IMG_MENU = {"icono": "icono.png",
+            "titulo": "titulo.png",
+            "fondo": "brain_home.png",
+            "titulo_game_over": "",
+            "fondo_game_over": "game_over.png",
+            "fondo_intro": "brain_textos.png",
+            "titulo_intro": "titulo_intro.png",
+            "menu_win": "game_win.png"}
 
 
 IMG_ENEMIGOS = {"av_idle": "avIdle.png",
-				"av_run1": "avrun.png",
-				"bot_idle": "botIdle.png",
-				"bot_run": "botrun.png",
-				"bot_walk1": "botwalk1.png",
-				"bot_walk2": "botwalk2.png",
-				"bot_walk11": "botwalkizq1.png",
-				"bot_walk12": "botwalkizq2.png",
-				"prueba": "p1_front.png",
-				"prueba2": "p3_front.png"}
+                "av_run1": "avrun.png",
+                "bot_idle": "botIdle.png",
+                "bot_run": "botrun.png",
+                "bot_walk1": "botwalk1.png",
+                "bot_walk2": "botwalk2.png",
+                "bot_walk11": "botwalkizq1.png",
+                "bot_walk12": "botwalkizq2.png",
+                "prueba": "p1_front.png",
+                "prueba2": "p3_front.png"}
 
 
 SPRITESHEETS = {"bot": "Prueba_sprite.png"}
 
 # sonidos
-CARPETA_SONIDOS = Path("sfx") 
+CARPETA_SONIDOS = Path("sfx")
 
-SFX = {"musica_menu": "DarkIntro.ogg", 
-		"musica": ["musica1.wav", "musica2.wav", "musica3.wav", "musica4.wav", "menu.ogg"],
-		"musica_creditos": "creditos.wav",
-		"boost": "boost.wav",
-		"tiempotron": "tiempotron.wav",
-		"combotron": "combotron.wav",
-		"lastimado": "lastimado.wav",
-		"lastimados_npc": "lastimados_NPC.wav",
-		"salto": "salto.wav",
-		"salto_boost": "salto_boost.wav",
-		"tiempo_limite": "tiempolimite.ogg",
-		"portal": "portal.wav"}
+SFX = {"musica_menu": "DarkIntro.ogg",
+       "musica": ["musica1.wav", "musica2.wav", "musica3.wav", "musica4.wav", "menu.ogg"],
+       "musica_creditos": "creditos.wav",
+       "boost": "boost.wav",
+                "tiempotron": "tiempotron.wav",
+                "combotron": "combotron.wav",
+                "lastimado": "lastimado.wav",
+                "lastimados_npc": "lastimados_NPC.wav",
+                "salto": "salto.wav",
+                "salto_boost": "salto_boost.wav",
+                "tiempo_limite": "tiempolimite.ogg",
+                "portal": "portal.wav"}
 
 # Menus
 
 INSTRUCCIONES_MENU_PRINCIPAL = ["[J] >> Jugar",
-								"[I] >> Intro",
-								"[T] >> Tutorial",
-								"----------------------------",
-					   			"[R] >> Controles",
-					   			"[C] >> Creditos",
-					   			"[ESC] >> Salir"]
+                                "[I] >> Intro",
+                                "[T] >> Tutorial",
+                                "----------------------------",
+                                "[R] >> Controles",
+                                "[C] >> Creditos",
+                                "[ESC] >> Salir"]
 
 
 INSTRUCCIONES_CONTROLES = ["Controles",
-						"Flechas >> Moverse (<- ->)", 
-						"[ESPACIO] >> Saltar",
-						"[SHIFT] >> Acelerar (dash)",
-						"[P] >> Pausar",
-						"[ESC] >> Salir",
-						"----------------------------",
-					   	"[M] >> Regresar al menu"]
+                           "Flechas >> Moverse (<- ->)",
+                           "[ESPACIO] >> Saltar",
+                           "[SHIFT] >> Acelerar (dash)",
+                           "[P] >> Pausar",
+                           "[ESC] >> Salir",
+                           "----------------------------",
+                           "[M] >> Regresar al menu"]
 
 
 INSTRUCCIONES_GAME_OVER = ["'Todo lo que vive esta destinado a morir'",
-							"Brain no pudo escapar de su prision impuesta",
-							"Gracias por jugar y ayudar a la destruccion del villano",
-							"[ESC] >> Salir a replantearse las cosas"]
+                           "Brain no pudo escapar de su prision impuesta",
+                           "Gracias por jugar y ayudar a la destruccion del villano",
+                           "[ESC] >> Salir a replantearse las cosas"]
 
 
 INSTRUCCIONES_GAME_WIN = ["'El 011010000110111101101101011000100111001001100101",
-							"es libre en el momento en que desea serlo'",
-							"Brain pudo escapar de su prision impuesta",
-							"Gracias por jugar y ayudar al villano"]
+                          "es libre en el momento en que desea serlo'",
+                          "Brain pudo escapar de su prision impuesta",
+                          "Gracias por jugar y ayudar al villano"]
 
 INSTRUCCIONES_GAME_WIN2 = ["'El hombre",
-							"es libre en el momento en que desea serlo'",
-							"Brain pudo escapar de su prision impuesta",
-							"Gracias por jugar y ayudar al villano",
-							"[ESC] >> Salir a replantearse las cosas"]
+                           "es libre en el momento en que desea serlo'",
+                           "Brain pudo escapar de su prision impuesta",
+                           "Gracias por jugar y ayudar al villano",
+                           "[ESC] >> Salir a replantearse las cosas"]
 
 INSTRUCCIONES_CREDITOS = ["Creadores (orden alfabetico):",
-							"Bazzi, Omar",
-							"Martin, Matias",
-							"-----------------------------",
-							"[M] >> Regresar al menu"]
+                          "Bazzi, Omar",
+                          "Martin, Matias",
+                          "-----------------------------",
+                          "[M] >> Regresar al menu"]
 
 INSTRUCCIONES_DIFICULTAD = ["Selecciona tu dificultad",
-							"------------------------",
-							"[F] >> Nivel Facil (Tiempo de sobra)",
-							"[M] >> Nivel Moderado (Para disfrutar del tiempo]",
-							"[D] >> Nivel Dificil  (Un desafio total)"]
+                            "------------------------",
+                            "[F] >> Nivel Facil (Tiempo de sobra)",
+                            "[M] >> Nivel Moderado (Para disfrutar del tiempo]",
+                            "[D] >> Nivel Dificil  (Un desafio total)"]
 
 INSTRUCCIONES_INTRO_1 = ["... En 1986 Basit y Alvi Amjad",
-						"crearon a Brain",
-						"considerado el primer virus informatico de la historia",
-						"Causo panico en la comunidad informatica",
-						"pese a propagarse solo por diskette",
-						"llego rapidamente a Europa y a USA.",
-						"Fue el culpable de la creacion de la ",
-						"primera vacuna o antivirus",
-						"Su historia se ha contado numerosas veces",
-						"siempre sinonimo de caos y destruccion",
-						"el malvado Brain ocupa un lugar de privilegio",
-						"en la historia negra de la computacion"						]
+                         "crearon a Brain",
+                         "considerado el primer virus informatico de la historia",
+                         "Causo panico en la comunidad informatica",
+                         "pese a propagarse solo por diskette",
+                         "llego rapidamente a Europa y a USA.",
+                         "Fue el culpable de la creacion de la ",
+                         "primera vacuna o antivirus",
+                         "Su historia se ha contado numerosas veces",
+                         "siempre sinonimo de caos y destruccion",
+                         "el malvado Brain ocupa un lugar de privilegio",
+                         "en la historia negra de la computacion"						]
 
 INSTRUCCIONES_INTRO_2 = ["Pero... ¿fue Brain creado a pedido suyo...?",
-						"¿Tenia un proposito auto-impuesto...?",
-						"¿Debia causar caos y destruccion...?",
-						"¿Tenia Brain opciones...?",
-						"Eres Brain, y vas a vivir su historia..."]
-
+                         "¿Tenia un proposito auto-impuesto...?",
+                         "¿Debia causar caos y destruccion...?",
+                         "¿Tenia Brain opciones...?",
+                         "Eres Brain, y vas a vivir su historia..."]
 
 
 MUSICA_MENU_PRINCIPAL = os.path.join(CARPETA_SONIDOS, SFX["musica_menu"])
@@ -243,7 +241,7 @@ FONDO_GAME_OVER = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo_game_over"])
 FONDO_INTRO = os.path.join(CARPETA_IMAGENES, IMG_MENU["fondo_intro"])
 
 
-
+# No implementado
 # botones controles
 BOTON_A = 0
 BOTON_X = 2
