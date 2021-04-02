@@ -12,6 +12,6 @@ Brain es un juego 2D de plataforma – runner para PC donde hay que controlar a 
 ***Genero:*** Aventura - Plataforma - Endless runner
 ***
 ### ***Preview***
-[![Gameplay BulletRain](https://img.youtube.com/vi//0.jpg)]()
+[![Gameplay BulletRain](https://img.youtube.com/vi/aPlGF9DLksY/0.jpg)](https://www.youtube.com/watch?v=aPlGF9DLksY)
 ***
 ### ***Imagenes***
